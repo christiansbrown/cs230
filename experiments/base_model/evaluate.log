@@ -1,0 +1,7 @@
+2018-02-21 17:41:06,626:INFO: Creating the dataset...
+2018-02-21 17:41:06,687:INFO: - done.
+2018-02-21 17:41:06,688:INFO: Creating the model...
+2018-02-21 17:41:07,017:INFO: - done.
+2018-02-21 17:41:07,017:INFO: Starting evaluation
+2018-02-21 17:41:07,214:INFO: Restoring parameters from experiments/base_model/best_weights/after-epoch-6
+2018-02-21 17:41:07,281:INFO: - Eval metrics: accuracy: 0.700 ; loss: 1.328

@@ -1,0 +1,77 @@
+2018-02-21 17:39:02,986:INFO: Creating the datasets...
+2018-02-21 17:39:03,113:INFO: - done.
+2018-02-21 17:39:03,113:INFO: Creating the model...
+2018-02-21 17:39:04,227:INFO: - done.
+2018-02-21 17:39:04,227:INFO: Starting training for 2 epoch(s)
+2018-02-21 17:39:07,654:INFO: Epoch 1/2
+2018-02-21 17:39:07,819:INFO: - Train metrics: accuracy: 0.200 ; loss: 1.391
+2018-02-21 17:39:08,707:INFO: - Eval metrics: accuracy: 0.200 ; loss: 1.390
+2018-02-21 17:39:09,572:INFO: - Found new best accuracy, saving in experiments/learning_rate/learning_rate_0.0001/best_weights/after-epoch-1
+2018-02-21 17:39:09,573:INFO: Epoch 2/2
+2018-02-21 17:39:09,582:INFO: - Train metrics: accuracy: 0.200 ; loss: 1.390
+2018-02-21 17:39:10,479:INFO: - Eval metrics: accuracy: 0.200 ; loss: 1.389
+2018-02-21 17:39:11,391:INFO: - Found new best accuracy, saving in experiments/learning_rate/learning_rate_0.0001/best_weights/after-epoch-2
+2018-02-25 19:45:36,278:INFO: Creating the datasets...
+2018-02-25 19:45:36,382:INFO: - done.
+2018-02-25 19:45:36,382:INFO: Creating the model...
+2018-02-25 19:45:37,162:INFO: - done.
+2018-02-25 19:45:37,162:INFO: Starting training for 2 epoch(s)
+2018-02-25 19:45:39,799:INFO: Epoch 1/2
+2018-02-25 19:45:40,145:INFO: - Train metrics: accuracy: 0.400 ; loss: 1.089
+2018-02-25 19:45:40,829:INFO: - Eval metrics: accuracy: 0.500 ; loss: 1.088
+2018-02-25 19:45:41,494:INFO: - Found new best accuracy, saving in experiments/learning_rate/learning_rate_0.0001/best_weights/after-epoch-1
+2018-02-25 19:45:41,495:INFO: Epoch 2/2
+2018-02-25 19:45:41,677:INFO: - Train metrics: accuracy: 0.400 ; loss: 1.088
+2018-02-25 19:45:42,460:INFO: - Eval metrics: accuracy: 0.500 ; loss: 1.088
+2018-02-25 19:45:43,145:INFO: - Found new best accuracy, saving in experiments/learning_rate/learning_rate_0.0001/best_weights/after-epoch-2
+2018-02-25 19:51:17,867:INFO: Creating the datasets...
+2018-02-25 19:51:17,968:INFO: - done.
+2018-02-25 19:51:17,968:INFO: Creating the model...
+2018-02-25 19:51:18,705:INFO: - done.
+2018-02-25 19:51:18,705:INFO: Starting training for 2 epoch(s)
+2018-02-25 19:51:21,355:INFO: Epoch 1/2
+2018-02-25 19:51:22,643:INFO: - Train metrics: accuracy: 0.030 ; loss: 1.102
+2018-02-25 19:51:23,317:INFO: - Eval metrics: accuracy: 0.400 ; loss: 1.099
+2018-02-25 19:51:23,997:INFO: - Found new best accuracy, saving in experiments/learning_rate/learning_rate_0.0001/best_weights/after-epoch-1
+2018-02-25 19:51:23,998:INFO: Epoch 2/2
+2018-02-25 19:51:25,123:INFO: - Train metrics: accuracy: 0.260 ; loss: 1.099
+2018-02-25 19:51:25,848:INFO: - Eval metrics: accuracy: 0.600 ; loss: 1.097
+2018-02-25 19:51:26,484:INFO: - Found new best accuracy, saving in experiments/learning_rate/learning_rate_0.0001/best_weights/after-epoch-2
+2018-02-25 19:59:51,428:INFO: Creating the datasets...
+2018-02-25 19:59:51,525:INFO: - done.
+2018-02-25 19:59:51,525:INFO: Creating the model...
+2018-02-25 19:59:52,286:INFO: - done.
+2018-02-25 19:59:52,287:INFO: Starting training for 2 epoch(s)
+2018-02-25 19:59:54,975:INFO: Epoch 1/2
+2018-02-25 20:00:24,773:INFO: - Train metrics: accuracy: 0.512 ; loss: 1.087
+2018-02-25 20:00:26,047:INFO: - Eval metrics: accuracy: 0.580 ; loss: 1.076
+2018-02-25 20:00:26,770:INFO: - Found new best accuracy, saving in experiments/learning_rate/learning_rate_0.0001/best_weights/after-epoch-1
+2018-02-25 20:00:26,771:INFO: Epoch 2/2
+2018-02-25 20:00:57,057:INFO: - Train metrics: accuracy: 0.536 ; loss: 1.056
+2018-02-25 20:00:58,372:INFO: - Eval metrics: accuracy: 0.550 ; loss: 1.032
+2018-02-25 20:40:49,633:INFO: Creating the datasets...
+2018-02-25 20:40:49,741:INFO: - done.
+2018-02-25 20:40:49,741:INFO: Creating the model...
+2018-02-25 20:40:50,521:INFO: - done.
+2018-02-25 20:40:50,521:INFO: Starting training for 2 epoch(s)
+2018-02-25 20:40:53,189:INFO: Epoch 1/2
+2018-02-25 20:40:54,497:INFO: - Train metrics: accuracy: 0.440 ; loss: 1.386
+2018-02-25 20:40:55,237:INFO: - Eval metrics: accuracy: 0.450 ; loss: 1.384
+2018-02-25 20:40:55,920:INFO: - Found new best accuracy, saving in experiments/learning_rate/learning_rate_0.0001/best_weights/after-epoch-1
+2018-02-25 20:40:55,921:INFO: Epoch 2/2
+2018-02-25 20:40:57,052:INFO: - Train metrics: accuracy: 0.480 ; loss: 1.382
+2018-02-25 20:40:57,808:INFO: - Eval metrics: accuracy: 0.450 ; loss: 1.381
+2018-02-25 20:40:58,427:INFO: - Found new best accuracy, saving in experiments/learning_rate/learning_rate_0.0001/best_weights/after-epoch-2
+2018-02-25 22:25:30,399:INFO: Creating the datasets...
+2018-02-25 22:25:30,488:INFO: - done.
+2018-02-25 22:25:30,489:INFO: Creating the model...
+2018-02-25 22:25:31,253:INFO: - done.
+2018-02-25 22:25:31,253:INFO: Starting training for 2 epoch(s)
+2018-02-25 22:25:34,009:INFO: Epoch 1/2
+2018-02-25 22:26:04,387:INFO: - Train metrics: accuracy: 0.447 ; loss: 1.377
+2018-02-25 22:26:05,743:INFO: - Eval metrics: accuracy: 0.440 ; loss: 1.365
+2018-02-25 22:26:06,525:INFO: - Found new best accuracy, saving in experiments/learning_rate/learning_rate_0.0001/best_weights/after-epoch-1
+2018-02-25 22:26:06,526:INFO: Epoch 2/2
+2018-02-25 22:26:36,675:INFO: - Train metrics: accuracy: 0.483 ; loss: 1.345
+2018-02-25 22:26:38,010:INFO: - Eval metrics: accuracy: 0.440 ; loss: 1.324
+2018-02-25 22:26:38,744:INFO: - Found new best accuracy, saving in experiments/learning_rate/learning_rate_0.0001/best_weights/after-epoch-2
