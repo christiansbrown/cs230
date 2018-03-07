@@ -6,6 +6,8 @@ import sys
 import re
 import numpy as np
 import random
+import nltk
+from nltk.corpus import stopwords
 
 def load_dataset(path_csv):
     """Loads dataset into memory from csv file"""
@@ -66,9 +68,15 @@ def process_dataset(dataset):
 
     print('Processing dataset..')
 
+    # Initialize new processed dataset (list) to return
+    dataset_processed = []
+
     # Define regex helpers to clean review text
-    regexAlpha = re.compile("[^a-xA-z.'-<> ]") # remove punctuation, symbols
     regexBrackets = re.compile('<[^>]+>') # remove text between brackets
+    regexAlpha = re.compile('[^a-z ]')
+    
+    # Define stopwords set to remove stopwords later
+    stop_words = set(stopwords.words('english'))
        
     # Make changes to each entry
     intProgress = -1 # Used for outputting processing progress
@@ -80,58 +88,79 @@ def process_dataset(dataset):
         
         # Break apart current entry
         artist, title, label, tracklist, style, year, rating, review = entry
-        tracks = tracklist.split() # Split tracklist into individual strings
-
-        # Format review
-        review = entry[-1]
-        review = regexAlpha.sub(' ', review) 
-        review = regexBrackets.sub(' ',review)
-        review = review.replace("'",'') # Remove apostrophe (lazy...)
-        review = review.replace('.',' ') # Remove period
-        review = review.replace(',',' ') # Remove comma
         
-        # Replace words (artist, tracklist, etc) from review
-        prohibitedWords = entry[0:-1] #All elements in entry excet review
-        tracklist = prohibitedWords[3] # Isolate tracklist to split apart
-        tracklist = tracklist.replace(',', ' ')
-        tracks = tracklist.split()
-        del prohibitedWords[3] # Replace tracklist with individual tracks
-        prohibitedWords.extend(tracks)
-        regexWords = re.compile('|'.join(map(re.escape, prohibitedWords)))
-        review = regexWords.sub(' ',review) # Remove words
+        # Weird edgecase - some reviews are in Japanese and cause problems
+        # Japanese entries include strange formatting in tracklist
+        # Use this formatting to skip try altogether (isalpha doesn't work)
+        if '\n<a' not in tracklist: 
         
-        # Condense whitespace, add back to entry
-        review = ' '.join(review.split())
-        review = review.lower()
-        entry[-1] = review 
-
-        # Add labels for sentiment (score) and era (year of release)
-        # Mean/median score is 3.7
-        # Define three eras st each have approx same number of reviews
-        # eras: 2001-2008, 2009-2013, 2014-2017
+            tracks = tracklist.split() # Split tracklist into individual strings
+    
+            # Format review
+            review = regexBrackets.sub(' ',review)
+            review = review.replace("'",'')
+            reviewWords = nltk.word_tokenize(review)
+            reviewWords = [word for word in reviewWords if word.isalpha()]
+    #        review = entry[-1]
+    #        review = regexAlpha.sub(' ', review) 
+    #        review = regexBrackets.sub(' ',review)
+    #        review = review.replace("'",'') # Remove apostrophe (lazy...)
+    #        review = review.replace('.',' ') # Remove period
+    #        review = review.replace(',',' ') # Remove comma
+            
+            # Replace words (artist, tracklist, etc) from review
+            prohibitedWords = entry[0:-1] #All elements in entry excet review
+            tracklist = prohibitedWords[3] # Isolate tracklist to split apart
+            tracklist = tracklist.replace(',', ' ')
+            tracks = tracklist.split()
+            del prohibitedWords[3] # Replace tracklist with individual tracks
+            prohibitedWords.extend(tracks)
+            reviewWords = [word for word in reviewWords if word not in prohibitedWords]
+            
+            # Remove stop words
+            reviewWords = [word for word in reviewWords if word not in stop_words]
+            
+    #        regexWords = re.compile('|'.join(map(re.escape, prohibitedWords)))
+    #        review = regexWords.sub(' ',review) # Remove words
+            
+            # Condense whitespace, add back to entry
+            review = ' '.join(reviewWords)
+            review = review.lower()
+            
+            # Check if review contains any non alpha characters (ie: japanese)
+            # If it contains only alpha, proceed.. o/w do not
+            review = regexAlpha.sub('!!!',review) # '!!!' to mark non alpha 
+            if '!!!' not in review:
+                entry[-1] = review             
         
-        # Assign positive/negative sentiment based off of score
-        if float(rating) <= 3.7:
-            sentiment = 'negative'
-        else:
-            sentiment = 'positive'
-        
-        # Assign era based off year of release
-        if int(year) <= 2008:
-            era = '2001-2009'
-        elif int(year) <= 2013:
-            era = '2009-2013'
-        else:
-            era = '2014-2017'
-        
-        # Cast current entry as list, append labels, add to dataset
-        entry = list(entry)
-        entry.append(sentiment)
-        entry.append(era)
-        dataset[idx] = entry # Update current entry
+                # Add labels for sentiment (score) and era (year of release)
+                # Mean/median score is 3.7
+                # Define three eras st each have approx same number of reviews
+                # eras: 2001-2008, 2009-2013, 2014-2017
+                
+                # Assign positive/negative sentiment based off of score
+                if float(rating) <= 3.7:
+                    sentiment = 'negative'
+                else:
+                    sentiment = 'positive'
+                
+                # Assign era based off year of release
+                if int(year) <= 2008:
+                    era = '2001-2009'
+                elif int(year) <= 2013:
+                    era = '2009-2013'
+                else:
+                    era = '2014-2017'
+                
+                # Cast current entry as list, append labels, add to dataset
+                entry = list(entry)
+                entry.append(sentiment)
+                entry.append(era)
+                dataset_processed.append(entry)
+    #            dataset[idx] = entry # Update current entry
 
     print('.. processing complete')
-    return dataset
+    return dataset_processed
 
 
 def save_dataset(dataset, save_dir):
@@ -175,26 +204,27 @@ if __name__ == "__main__":
     dataset = load_dataset(path_dataset)
     print("- done.")
 
+    
+
     # Process dataset
     dataset_processed = process_dataset(dataset)
 
     # Split the dataset into train, dev and split
     # Shuffle with seed for reproducibility
     # To do: implement cross validation?
-    dataset_processed = random.Random(5).sample(dataset_processed, 
-                                                     len(dataset_processed))
-    train_dataset = dataset_processed[:int(0.7*len(dataset))]
-    dev_dataset = dataset_processed[int(0.7*len(dataset)) : 
-                                                        int(0.85*len(dataset))]
-    test_dataset = dataset_processed[int(0.85*len(dataset)):]
+    m = len(dataset_processed) # number of samples after processing
+    dataset_processed = random.Random(5).sample(dataset_processed, m)
+    train_dataset = dataset_processed[:int(0.7*m)]
+    dev_dataset = dataset_processed[int(0.7*m):int(0.85*m)]
+    test_dataset = dataset_processed[int(0.85*m):]
 
     # Save datasets to file
-    isToy = True # TODO: change this as necessary
+    isToy = False # TODO: change this as necessary
     if isToy:
         # Toy datasets to test locally
-        save_dataset(train_dataset[0:1000], 'data/kaggle/train')
-        save_dataset(dev_dataset[0:100], 'data/kaggle/dev')
-        save_dataset(test_dataset[0:100], 'data/kaggle/test')
+        save_dataset(train_dataset[0:100], 'data/kaggle/train')
+        save_dataset(dev_dataset[0:10], 'data/kaggle/dev')
+        save_dataset(test_dataset[0:10], 'data/kaggle/test')
     else:
         # Full dataset
         save_dataset(train_dataset, 'data/kaggle/train')

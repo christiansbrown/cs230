@@ -1,9 +1,9 @@
 {
-    "train_size": 1000,
-    "dev_size": 100,
-    "test_size": 100,
-    "vocab_size": 27456,
-    "number_of_tags": 4,
+    "train_size": 9213,
+    "dev_size": 1974,
+    "test_size": 1975,
+    "vocab_size": 66766,
+    "number_of_tags": 3,
     "pad_word": "<pad>",
     "pad_tag": "O",
     "num_oov_buckets": 1
