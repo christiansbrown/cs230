@@ -33,6 +33,16 @@ def save_vocab_to_txt_file(vocab, txt_path):
     """
     with open(txt_path, "w") as f:
         f.write("\n".join(token for token in vocab))
+        
+    # Ensure that there are no empty lines written to file...
+    f = open(txt_path,'r+')
+    d = f.readlines()
+    f.seek(0)
+    for i in d:
+        if i != '\n':
+            f.write(i)
+    f.truncate()
+    f.close()
 
 
 def save_dict_to_json(d, json_path):

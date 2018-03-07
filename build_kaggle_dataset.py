@@ -132,7 +132,6 @@ def process_dataset(dataset):
             review = regexAlpha.sub('!!!',review) # '!!!' to mark non alpha 
             if '!!!' not in review:
                 
-                review = ' '.join(review.split()) # Condense whitespace check
                 entry[-1] = review             
         
                 # Add labels for sentiment (score) and era (year of release)
