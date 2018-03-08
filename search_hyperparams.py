@@ -58,4 +58,4 @@ if __name__ == "__main__":
 
         # Launch job (name has to be unique)
         job_name = "learning_rate_{}".format(learning_rate)
-        launch_training_job(args.parent_dir, args.data_dir, job_name, params)
+        launch_training_job(args.parent_dir, args.data_dir, args.objective, job_name, params)
