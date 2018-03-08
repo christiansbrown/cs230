@@ -37,7 +37,7 @@ def launch_training_job(parent_dir, data_dir, objective, job_name, params):
 
     # Launch training with this config
     cmd = "{python} train.py --model_dir {model_dir} --data_dir {data_dir} --objective {objective}".format(python=PYTHON,
-            model_dir=model_dir, data_dir=data_dir)
+            model_dir=model_dir, data_dir=data_dir, objective=objective)
     print(cmd)
     check_call(cmd, shell=True)
 
