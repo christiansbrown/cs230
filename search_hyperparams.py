@@ -14,11 +14,9 @@ parser.add_argument('--parent_dir', default='experiments/learning_rate',
                     help="Directory containing params.json")
 parser.add_argument('--data_dir', default='data/small',
                     help="Directory containing the dataset")
-parser.add_argument('--objective', default='sentiment',
-                    help="Objective of classifier")
 
 
-def launch_training_job(parent_dir, data_dir, objective, job_name, params):
+def launch_training_job(parent_dir, data_dir, job_name, params):
     """Launch training of the model with a set of hyperparameters in parent_dir/job_name
 
     Args:
@@ -36,8 +34,8 @@ def launch_training_job(parent_dir, data_dir, objective, job_name, params):
     params.save(json_path)
 
     # Launch training with this config
-    cmd = "{python} train.py --model_dir {model_dir} --data_dir {data_dir} --objective {objective}".format(python=PYTHON,
-            model_dir=model_dir, data_dir=data_dir, objective=objective)
+    cmd = "{python} train.py --model_dir {model_dir} --data_dir {data_dir}".format(python=PYTHON,
+            model_dir=model_dir, data_dir=data_dir)
     print(cmd)
     check_call(cmd, shell=True)
 
