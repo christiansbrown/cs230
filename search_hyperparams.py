@@ -4,15 +4,16 @@ import argparse
 import os
 from subprocess import check_call
 import sys
+import itertools
 
 from model.utils import Params
 
 
 PYTHON = sys.executable
 parser = argparse.ArgumentParser()
-parser.add_argument('--parent_dir', default='experiments/learning_rate',
+parser.add_argument('--parent_dir', default='experiments/permutations',
                     help="Directory containing params.json")
-parser.add_argument('--data_dir', default='data/small',
+parser.add_argument('--data_dir', default='data/kaggle',
                     help="Directory containing the dataset")
 parser.add_argument('--objective', default='sentiment',
                     help="Objective of classifier")
@@ -49,13 +50,40 @@ if __name__ == "__main__":
     assert os.path.isfile(json_path), "No json configuration file found at {}".format(json_path)
     params = Params(json_path)
 
-    # Perform hypersearch over one parameter
-    learning_rates = [1e-4, 1e-3, 1e-2]
+    # Perform hypersearch over multiple parameters
+    ls_learning_rates = [1e-4, 1e-3, 1e-2]
+    ls_reg_strengths = [1e-3, 1e-2, 1e-1]
+    ls_embedding_sizes = [50,150,300]
+    ls_lstm_num_units = [25,50]
 
-    for learning_rate in learning_rates:
+    # Define permutations of above hyperparameters
+    lsHPs = [ls_learning_rates,ls_reg_strengths,ls_embedding_sizes,ls_lstm_num_units]
+    lsHPperms = list(itertools.product(*lsHPs))            
+
+    # for learning_rate in learning_rates:
+    counter = 0
+    for HPperm in lsHPperms:
+
+        counter += 1
+        print(' HP permutation {} of {}'.format(counter,len(lsHPperms)))
+
+        # Define current set of hyperparameters
+        learning_rate, reg_strength, embedding_size, lstm_num_units = HPperm
+
+
+        print(' learning rate:',learning_rate)
+        print(' reg_strength:',reg_strength)
+        print(' embedding_size:',embedding_size)
+        print(' lstm_num_units:',lstm_num_units)
+
         # Modify the relevant parameter in params
         params.learning_rate = learning_rate
+        params.reg_stregnth = reg_strength
+        params.embedding_size = embedding_size
+        params.lstm_num_units = lstm_num_units
 
         # Launch job (name has to be unique)
-        job_name = "learning_rate_{}".format(learning_rate)
+        # job_name = "learning_rate_{}".format(learning_rate)
+        # job_name = "HP_permutation_{}".format(counter)
+        job_name = "LR_{}_RS_{}_ES_{}_LNU_{}".format(learning_rate,reg_strength,embedding_size,lstm_num_units)
         launch_training_job(args.parent_dir, args.data_dir, args.objective, job_name, params)

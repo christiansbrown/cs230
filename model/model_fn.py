@@ -66,6 +66,10 @@ def model_fn(mode, inputs, params, reuse=False):
         logits = build_model(mode, inputs, params)
         predictions = tf.argmax(logits, -1)
 
+    # Find weights so that we can regularize 
+    w = [w for w in tf.trainable_variables() if 'lstm_cell/kernel' in w.name]
+    reg_loss = tf.reduce_sum(tf.nn.l2_loss(w))
+
     # Define loss and accuracy (we need to apply a mask to account for padding)
     losses = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels)
     # TODO: Confirm that a mask is not necessary for this problem
@@ -73,7 +77,7 @@ def model_fn(mode, inputs, params, reuse=False):
 #    print('mask:',mask)
 #    exit(0)
 #    losses = tf.boolean_mask(losses, mask)
-    loss = tf.reduce_mean(losses)
+    loss = tf.reduce_mean(losses) + params.reg_strength*reg_loss
     accuracy = tf.reduce_mean(tf.cast(tf.equal(labels, predictions), tf.float32))
 
     # Define training step that minimizes the loss with the Adam optimizer
