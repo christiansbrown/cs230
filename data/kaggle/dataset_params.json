@@ -1,8 +1,8 @@
 {
-    "train_size": 100,
-    "dev_size": 10,
-    "test_size": 10,
-    "vocab_size": 6194,
+    "train_size": 9213,
+    "dev_size": 1974,
+    "test_size": 1975,
+    "vocab_size": 66766,
     "number_of_tags": 4,
     "pad_word": "<pad>",
     "pad_tag": "O",
