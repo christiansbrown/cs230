@@ -52,9 +52,9 @@ if __name__ == "__main__":
 
     # Perform hypersearch over multiple parameters
     ls_learning_rates = [1e-4, 1e-3, 1e-2]
-    ls_reg_strengths = [1e-3, 1e-2, 1e-1]
-    ls_embedding_sizes = [50,150,300]
-    ls_lstm_num_units = [25,50]
+    ls_reg_strengths = [1e-2, 1e-1]
+    ls_embedding_sizes = [50,150]
+    ls_lstm_num_units = [25]
 
     # Define permutations of above hyperparameters
     lsHPs = [ls_learning_rates,ls_reg_strengths,ls_embedding_sizes,ls_lstm_num_units]
