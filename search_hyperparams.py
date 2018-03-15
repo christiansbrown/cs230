@@ -58,7 +58,7 @@ if __name__ == "__main__":
     ls_dropout_rates = [.3, .5, .7]
 
     # Define permutations of above hyperparameters
-    lsHPs = [ls_learning_rates,ls_reg_strengths,ls_embedding_sizes,ls_lstm_num_units]
+    lsHPs = [ls_learning_rates,ls_reg_strengths,ls_embedding_sizes,ls_lstm_num_units, ls_dropout_rates]
     lsHPperms = list(itertools.product(*lsHPs))            
 
     # for learning_rate in learning_rates:
