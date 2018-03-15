@@ -51,7 +51,7 @@ if __name__ == "__main__":
     params = Params(json_path)
 
     # Perform hypersearch over multiple parameters
-    ls_learning_rates = [1e-3, 1e-2]
+    ls_learning_rates = [1e-3, 1e-2, 1e-1]
     ls_reg_strengths = [1e-2, 1e-1]
     ls_embedding_sizes = [150]
     ls_lstm_num_units = [25]
