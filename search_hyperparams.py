@@ -51,10 +51,11 @@ if __name__ == "__main__":
     params = Params(json_path)
 
     # Perform hypersearch over multiple parameters
-    ls_learning_rates = [1e-4, 1e-3, 1e-2]
+    ls_learning_rates = [1e-3, 1e-2]
     ls_reg_strengths = [1e-2, 1e-1]
-    ls_embedding_sizes = [50,150]
+    ls_embedding_sizes = [150]
     ls_lstm_num_units = [25]
+    ls_dropout_rates = [.3, .5, .7]
 
     # Define permutations of above hyperparameters
     lsHPs = [ls_learning_rates,ls_reg_strengths,ls_embedding_sizes,ls_lstm_num_units]
@@ -68,22 +69,25 @@ if __name__ == "__main__":
         print(' HP permutation {} of {}'.format(counter,len(lsHPperms)))
 
         # Define current set of hyperparameters
-        learning_rate, reg_strength, embedding_size, lstm_num_units = HPperm
+        learning_rate, reg_strength, embedding_size, lstm_num_units, dropout_rate = HPperm
 
 
         print(' learning rate:',learning_rate)
         print(' reg_strength:',reg_strength)
         print(' embedding_size:',embedding_size)
         print(' lstm_num_units:',lstm_num_units)
+        print(' dropout_rate:',dropout_rate)
+
 
         # Modify the relevant parameter in params
         params.learning_rate = learning_rate
         params.reg_stregnth = reg_strength
         params.embedding_size = embedding_size
         params.lstm_num_units = lstm_num_units
+        params.dropout_rate = dropout_rate
 
         # Launch job (name has to be unique)
         # job_name = "learning_rate_{}".format(learning_rate)
         # job_name = "HP_permutation_{}".format(counter)
-        job_name = "LR_{}_RS_{}_ES_{}_LNU_{}".format(learning_rate,reg_strength,embedding_size,lstm_num_units)
+        job_name = "LR_{}_RS_{}_ES_{}_LNU_{}_DR_{}".format(learning_rate,reg_strength,embedding_size,lstm_num_units, dropout_rate)
         launch_training_job(args.parent_dir, args.data_dir, args.objective, job_name, params)
