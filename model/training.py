@@ -118,3 +118,9 @@ def train_and_evaluate(train_model_spec, eval_model_spec, model_dir, params, res
             # Save latest eval metrics in a json file in the model directory
             last_json_path = os.path.join(model_dir, "metrics_eval_last_weights.json")
             save_dict_to_json(metrics, last_json_path)
+
+
+        # See if we can save and take a look into some of the activations/etc..?
+        # print(train_model_spec['avg_output'])
+        # activations = sess.run(train_model_spec['avg_output'])
+        # print(activations)

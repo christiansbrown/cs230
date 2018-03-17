@@ -71,8 +71,10 @@ def input_fn(mode, sentences, labels, params):
         .padded_batch(params.batch_size, padded_shapes=padded_shapes, padding_values=padding_values)
         .prefetch(1)  # make sure you always have one batch ready to serve
     )
-    
-    
+
+    # Try something sketchy - repeat dataset can maybe prevent this from fucking up?
+    dataset = dataset.repeat()
+
     # Create initializable iterator from this dataset so that we can reset at each epoch
     iterator = dataset.make_initializable_iterator()
 

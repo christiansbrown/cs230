@@ -27,18 +27,29 @@ def build_model(mode, inputs, params):
         lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(params.lstm_num_units)
         # Output is sequence of outputs for each cell, state is the final state
         output, state  = tf.nn.dynamic_rnn(lstm_cell, sentence, dtype=tf.float32)
+        # output, state  = tf.nn.dynamic_rnn(lstm_cell, sentence, dtype=tf.float32)
+
         # Take mean of all cell outputs
-        d = tf.reduce_mean(output, axis = 1) 
+        avg_output = tf.reduce_mean(output, axis = 1) 
         # State is a tuple hidden state output and activated output
         c, h = state
         # Compute logits from the output of the LSTM
-        logits = tf.layers.dense(d, params.number_of_tags)
+        # logits = tf.layers.dense(avg_output, params.number_of_tags)
+
+        # Compute logits from the last cell output of the LSTM
+        # Try this and see if it works..?
+        last_output = tf.gather(output, indices = int(value.get_shape()[1]) - 1, axis = 1)
+        logits = tf.layers.dense(last_output, params.number_of_tags)
+
+        # print('logits:',logits)
 
 
     else:
         raise NotImplementedError("Unknown model version: {}".format(params.model_version))
 
-    return logits
+
+    # Return logits, but also return average activations
+    return logits, avg_output, output
 
 
 def model_fn(mode, inputs, params, reuse=False):
@@ -63,8 +74,13 @@ def model_fn(mode, inputs, params, reuse=False):
     # MODEL: define the layers of the model
     with tf.variable_scope('model', reuse=reuse):
         # Compute the output distribution of the model and the predictions
-        logits = build_model(mode, inputs, params)
+        logits, avg_output, outputs = build_model(mode, inputs, params)
         predictions = tf.argmax(logits, -1)
+
+        # Add something to record the activations here..?
+        # I should obtain it from build model!  ^^ above... return multiple args
+
+
 
     # Find weights so that we can regularize 
     w = [w for w in tf.trainable_variables() if 'lstm_cell/kernel' in w.name]
@@ -114,12 +130,14 @@ def model_fn(mode, inputs, params, reuse=False):
     variable_init_op = tf.group(*[tf.global_variables_initializer(), tf.tables_initializer()])
     model_spec['variable_init_op'] = variable_init_op
     model_spec["predictions"] = predictions
+    model_spec['avg_output'] = avg_output
     model_spec['loss'] = loss
     model_spec['accuracy'] = accuracy
     model_spec['metrics_init_op'] = metrics_init_op
     model_spec['metrics'] = metrics
     model_spec['update_metrics'] = update_metrics_op
     model_spec['summary_op'] = tf.summary.merge_all()
+    model_spec['outputs'] = outputs
 
     if is_training:
         model_spec['train_op'] = train_op
