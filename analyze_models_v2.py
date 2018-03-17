@@ -147,7 +147,8 @@ with tf.Session() as sess:
 		prediction_vals.append(sess.run(predictions))
 		labels_vals.append(sess.run(labels))
 		sentence_vals.append(sess.run(sentences))
-		break
+		if i > 0:
+			break
 
 	# Extract values for metrics
 	metrics_values = {k: v[0] for k, v in eval_metrics.items()}
@@ -157,10 +158,10 @@ with tf.Session() as sess:
 	# Extract values for outputs
 	# outputs = sess.run(outputs)
 
-pkl_output = output_vals[0]
-pkl_preds = prediction_vals[0]
-pkl_labels = labels_vals[0]
-pkl_sentences = sentence_vals[0]
+pkl_output = output_vals[1]
+pkl_preds = prediction_vals[1]
+pkl_labels = labels_vals[1]
+pkl_sentences = sentence_vals[1]
 print('butthole!')
 # exit(0)
 
