@@ -134,7 +134,7 @@ with tf.Session() as sess:
 
 	# Compute metrics over the dataset
 	output_vals = []
-	precition_vals = []
+	prediction_vals = []
 	for i in range(num_steps):
 		print('step number:',i)
 		sess.run(update_metrics)
@@ -157,6 +157,8 @@ print(np.shape(output_vals))
 # write to cPickle
 # pickle.dump(output_vals, open( "output_vals_small.pkl", "wb" ) )
 pickle.dump(output_vals[0], open( "output_vals.pkl", "wb" ) )
+pickle.dump(prediction_vals[0], open( "prediction_vals.pkl", "wb" ) )
+
 
 # read from cPickle
 # output_vals = pickle.load( open( "output_vals_small.pkl", "rb" ) )
