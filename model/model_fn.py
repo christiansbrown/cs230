@@ -34,13 +34,13 @@ def build_model(mode, inputs, params):
         # State is a tuple hidden state output and activated output
         c, h = state
         # Compute logits from the output of the LSTM
-        # logits = tf.layers.dense(avg_output, params.number_of_tags)
+        logits = tf.layers.dense(avg_output, params.number_of_tags)
 
         # Compute logits from the last cell output of the LSTM
         # Try this and see if it works..?
         # Try to call last relevent output instead of last (padded) output
-        last_output = tf.gather(output, indices = tf.shape(output)[1] - 1, axis = 1)
-        logits = tf.layers.dense(last_output, params.number_of_tags)
+        # last_output = tf.gather(output, indices = tf.shape(output)[1] - 1, axis = 1)
+        # logits = tf.layers.dense(last_output, params.number_of_tags)
         # last_output = tf.gather(output, indices = inputs['sentence_lengths'] - 1, axis = 1)
         # logits = tf.layers.dense(last_output, params.number_of_tags)
         # print('logits:',logits)
