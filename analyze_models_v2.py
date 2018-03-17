@@ -128,7 +128,6 @@ with tf.Session() as sess:
 	labels = inputs_sentiment['labels']
 	sentences = inputs_sentiment['sentence']
 
-
 	global_step = tf.train.get_global_step()
 
 	# Load the dataset into the pipeline and initialize the metrics init op
@@ -140,6 +139,9 @@ with tf.Session() as sess:
 	prediction_vals = []
 	labels_vals = []
 	sentence_vals = []
+
+	sentence_test = []
+
 	for i in range(num_steps):
 		print('step number:',i)
 		sess.run(update_metrics)
@@ -147,6 +149,10 @@ with tf.Session() as sess:
 		prediction_vals.append(sess.run(predictions))
 		labels_vals.append(sess.run(labels))
 		sentence_vals.append(sess.run(sentences))
+
+		# Try some shit
+		sentence_test.append(sess.run(reviews))
+
 		break
 
 	# Extract values for metrics
@@ -160,13 +166,12 @@ with tf.Session() as sess:
 pkl_output = output_vals[0]
 pkl_preds = prediction_vals[0]
 pkl_labels = labels_vals[0]
-print(np.shape(sentence_vals))
-print(np.shape(output_vals))
-print(np.shape(labels_vals))
-pkl_sentences = sentence_vals[0,:,:]
+pkl_sentences = sentence_vals[0]
 
-print(np.shape(pkl_sentences))
-print(np.shape(pkl_output))
+pkl_sentence_test = sentence_test[0]
+
+
+# exit(0)
 
 
 
@@ -176,6 +181,8 @@ pickle.dump(pkl_output, open( "output_vals.pkl", "wb" ) )
 pickle.dump(pkl_preds, open( "prediction_vals.pkl", "wb" ) )
 pickle.dump(pkl_labels, open( "labels_vals.pkl", "wb" ) )
 pickle.dump(pkl_sentences, open( "sentence_vals.pkl", "wb" ) )
+
+pickle.dump(pkl_sentence_test, open( "sentence_test.pkl", "wb"))
 
 # TODO: Dump a few other useful things as well
 
