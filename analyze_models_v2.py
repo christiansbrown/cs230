@@ -150,14 +150,16 @@ with tf.Session() as sess:
 	# outputs = sess.run(outputs)
 
 # Dump outputs into a csv for testing....
-print(type(output_vals))
-print(output_vals)
 print(np.shape(output_vals))
+print(np.shape(prediction_vals))
+
 
 # write to cPickle
-# pickle.dump(output_vals, open( "output_vals_small.pkl", "wb" ) )
+# pickle.dump(output_vals, open( "output_vals_small.pkl", "wb" ) 
 pickle.dump(output_vals[0], open( "output_vals.pkl", "wb" ) )
 pickle.dump(prediction_vals[0], open( "prediction_vals.pkl", "wb" ) )
+
+# TODO: Dump a few other useful things as well
 
 
 # read from cPickle
