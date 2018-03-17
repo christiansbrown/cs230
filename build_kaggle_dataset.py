@@ -224,9 +224,15 @@ if __name__ == "__main__":
         save_dataset(train_dataset[0:100], 'data/kaggle/train')
         save_dataset(dev_dataset[0:10], 'data/kaggle/dev')
         save_dataset(test_dataset[0:10], 'data/kaggle/test')
+
+        dataset_processed_toy = train_dataset[0:100] + dev_dataset[0:10] + test_dataset[0:10]
+
+        save_dataset(dataset_processed_toy, 'data/kaggle/all')
     else:
         # Full dataset
         save_dataset(train_dataset, 'data/kaggle/train')
         save_dataset(dev_dataset, 'data/kaggle/dev')
         save_dataset(test_dataset, 'data/kaggle/test')
+        save_dataset(dataset_processed, 'data/kaggle/all')
+
         

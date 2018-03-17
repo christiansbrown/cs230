@@ -15,6 +15,8 @@ parser.add_argument('--min_count_tag', default=1, help="Minimum count for tags i
 parser.add_argument('--data_dir', default='data/kaggle', help="Directory containing the dataset")
 parser.add_argument('--objective', default = 'sentiment', 
                     help="Define classification objective of model as either 'sentiment' or 'era'")
+parser.add_argument('--is_split', default='True', help="Use all data or not? True/False")
+# parser.add_argument('--toy', default='False', help="True/False to use smaller dataset")
 
 # Hyper parameters for the vocab
 NUM_OOV_BUCKETS = 1 # number of buckets (= number of ids) for unknown words
@@ -77,32 +79,59 @@ def update_vocab(txt_path, vocab):
 
 if __name__ == '__main__':
     args = parser.parse_args()
+    if args.is_split == "True":
+        is_split = True
+    elif args.is_split == "False":
+        is_split = False
+    else:
+        raise ValueError("Please define is_split as either 'True' or 'False'")
 
     # Build word vocab with train and test datasets (reviews)
     print("Building word vocabulary...")
     words = Counter()
-    size_train_sentences = update_vocab(os.path.join(args.data_dir, 'train/reviews.txt'), words)
-    size_dev_sentences = update_vocab(os.path.join(args.data_dir, 'dev/reviews.txt'), words)
-    size_test_sentences = update_vocab(os.path.join(args.data_dir, 'test/reviews.txt'), words)
+
+    if is_split:
+        print(' - split reviews')
+        size_train_sentences = update_vocab(os.path.join(args.data_dir, 'train/reviews.txt'), words)
+        size_dev_sentences = update_vocab(os.path.join(args.data_dir, 'dev/reviews.txt'), words)
+        size_test_sentences = update_vocab(os.path.join(args.data_dir, 'test/reviews.txt'), words)
+    else:
+        print(' - all reviews')
+        size_reviews = update_vocab(os.path.join(args.data_dir, 'reviews.txt'), words)
     print("- done.")
 
     # Build tag vocab with train and test datasets with inputted objective
-    if args.objective == 'sentiment':
-        print("Building sentiments vocabulary...")
-        tags = Counter()
-        size_train_tags = update_vocab(os.path.join(args.data_dir, 'train/sentiments.txt'), tags)
-        size_dev_tags = update_vocab(os.path.join(args.data_dir, 'dev/sentiments.txt'), tags)
-        size_test_tags = update_vocab(os.path.join(args.data_dir, 'test/sentiments.txt'), tags)
-        print("- done.")
-    elif args.objective == 'era':
-        print("Building eras vocabulary...")
-        tags = Counter()
-        size_train_tags = update_vocab(os.path.join(args.data_dir, 'train/eras.txt'), tags)
-        size_dev_tags = update_vocab(os.path.join(args.data_dir, 'dev/eras.txt'), tags)
-        size_test_tags = update_vocab(os.path.join(args.data_dir, 'test/eras.txt'), tags)
-        print("- done.")
-    else: raise ValueError("Invalid objective! Set as either 'sentiment' or 'era'")
+    if is_split:
+        if args.objective == 'sentiment':
+            print("Building sentiments vocabulary...")
+            tags = Counter()
+            size_train_tags = update_vocab(os.path.join(args.data_dir, 'train/sentiments.txt'), tags)
+            size_dev_tags = update_vocab(os.path.join(args.data_dir, 'dev/sentiments.txt'), tags)
+            size_test_tags = update_vocab(os.path.join(args.data_dir, 'test/sentiments.txt'), tags)
+            print("- done.")
+        elif args.objective == 'era':
+            print("Building eras vocabulary...")
+            tags = Counter()
+            size_train_tags = update_vocab(os.path.join(args.data_dir, 'train/eras.txt'), tags)
+            size_dev_tags = update_vocab(os.path.join(args.data_dir, 'dev/eras.txt'), tags)
+            size_test_tags = update_vocab(os.path.join(args.data_dir, 'test/eras.txt'), tags)
+            print("- done.")
+        else: raise ValueError("Invalid objective! Set as either 'sentiment' or 'era'")
+    
+            # Assert same number of examples in datasets
+        assert size_train_sentences == size_train_tags
+        assert size_dev_sentences == size_dev_tags
+        assert size_test_sentences == size_test_tags
 
+    else:
+        print("Building vocabulary all folder...")
+        sentiment_tags = Counter()
+        size_sentiment_tags = update_vocab(os.path.join(args.data_dir, 'sentiments.txt'), sentiment_tags)
+        era_tags = Counter()
+        size_era_tags = update_vocab(os.path.join(args.data_dir, 'eras.txt'), era_tags)
+        assert size_reviews == size_sentiment_tags
+        assert size_reviews == size_era_tags
+        print('-done')
 #    # Build tag vocab with train and test datasets (sentiment)
 #    print("Building sentiments vocabulary...")
 #    sentiments = Counter()
@@ -119,47 +148,72 @@ if __name__ == '__main__':
 #    size_test_eras = update_vocab(os.path.join(args.data_dir, 'test/eras.txt'), eras)
 #    print("- done.")
 
-    # Assert same number of examples in datasets
-    assert size_train_sentences == size_train_tags
-    assert size_dev_sentences == size_dev_tags
-    assert size_test_sentences == size_test_tags
-
     # Only keep most frequent tokens
     words = [tok for tok, count in words.items() if count >= args.min_count_word]
-    tags = [tok for tok, count in tags.items() if count >= args.min_count_tag]
+    if is_split:
+        tags = [tok for tok, count in tags.items() if count >= args.min_count_tag]
 #    sentiments = [tok for tok, count in sentiments.items() if count >= args.min_count_tag]
 #    eras = [tok for tok, count in eras.items() if count >= args.min_count_tag]
+    else:
+        sentiment_tags = [tok for tok, count in sentiment_tags.items() if count >= args.min_count_tag]
+        era_tags = [tok for tok, count in era_tags.items() if count >= args.min_count_tag]
 
 
     # Add pad tokens
     if PAD_WORD not in words: words.append(PAD_WORD)
-    if PAD_TAG not in tags: tags.append(PAD_TAG)
+    if is_split:
+        if PAD_TAG not in tags: tags.append(PAD_TAG)
+    else:
+        if PAD_TAG not in sentiment_tags: 
+            sentiment_tags.append(PAD_TAG)
+        if PAD_TAG not in era_tags:
+            era_tags.append(PAD_TAG)
 #    if PAD_SENTIMENT not in sentiments: sentiments.append(PAD_SENTIMENT)
 #    if PAD_ERA not in eras: eras.append(PAD_ERA)
 
     # Save vocabularies to file
     print("Saving vocabularies to file...")
     save_vocab_to_txt_file(words, os.path.join(args.data_dir, 'words.txt'))
-    save_vocab_to_txt_file(tags, os.path.join(args.data_dir, 'tags.txt'))
+    if is_split:
+        save_vocab_to_txt_file(tags, os.path.join(args.data_dir, 'tags.txt'))
+    else:
+        save_vocab_to_txt_file(sentiment_tags, os.path.join(args.data_dir, 'sentiment_tags.txt'))
+        save_vocab_to_txt_file(era_tags, os.path.join(args.data_dir, 'era_tags.txt'))
 #    save_vocab_to_txt_file(sentiments, os.path.join(args.data_dir, 'sentiments.txt'))
 #    save_vocab_to_txt_file(eras, os.path.join(args.data_dir, 'eras.txt'))
     print("- done.")
 
     # Save datasets properties in json file
-    sizes = {
-        'train_size': size_train_sentences,
-        'dev_size': size_dev_sentences,
-        'test_size': size_test_sentences,
-        'vocab_size': len(words) + NUM_OOV_BUCKETS,
-        'number_of_tags': len(tags),
-#        'number_of_sentiments': len(sentiments),
-#        'number of eras':len(eras),
-        'pad_word': PAD_WORD,
-        'pad_tag': PAD_TAG,
-#        'pad_sentiment': PAD_SENTIMENT,
-#        'pad_era':PAD_ERA,
-        'num_oov_buckets': NUM_OOV_BUCKETS
-    }
+    if is_split:
+        sizes = {
+            'train_size': size_train_sentences,
+            'dev_size': size_dev_sentences,
+            'test_size': size_test_sentences,
+            'vocab_size': len(words) + NUM_OOV_BUCKETS,
+            'number_of_tags': len(tags),
+    #        'number_of_sentiments': len(sentiments),
+    #        'number of eras':len(eras),
+            'pad_word': PAD_WORD,
+            'pad_tag': PAD_TAG,
+    #        'pad_sentiment': PAD_SENTIMENT,
+    #        'pad_era':PAD_ERA,
+            'num_oov_buckets': NUM_OOV_BUCKETS
+        }
+    else:
+        sizes = {
+            'dataset_size': size_reviews,
+            'vocab_size': len(words) + NUM_OOV_BUCKETS,
+            'number_of_sentiments': len(sentiment_tags),
+            'number_of_eras': len(era_tags),
+    #        'number_of_sentiments': len(sentiments),
+    #        'number of eras':len(eras),
+            'pad_word': PAD_WORD,
+            'pad_tag': PAD_TAG,
+    #        'pad_sentiment': PAD_SENTIMENT,
+    #        'pad_era':PAD_ERA,
+            'num_oov_buckets': NUM_OOV_BUCKETS
+        }
+
     save_dict_to_json(sizes, os.path.join(args.data_dir, 'dataset_params.json'))
 
     # Logging sizes
