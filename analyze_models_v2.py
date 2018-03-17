@@ -172,6 +172,8 @@ print(np.shape(sentence_vals[0]))
 # pickle.dump(output_vals, open( "output_vals_small.pkl", "wb" ) 
 pickle.dump(output_vals[0], open( "output_vals.pkl", "wb" ) )
 pickle.dump(prediction_vals[0], open( "prediction_vals.pkl", "wb" ) )
+pickle.dump(labels_vals[0], open( "labels_vals.pkl", "wb" ) )
+pickle.dump(sentence_vals[0], open( "sentence_vals.pkl", "wb" ) )
 
 # TODO: Dump a few other useful things as well
 
