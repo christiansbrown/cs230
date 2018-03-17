@@ -38,7 +38,7 @@ def build_model(mode, inputs, params):
 
         # Compute logits from the last cell output of the LSTM
         # Try this and see if it works..?
-        last_output = tf.gather(output, indices = int(output.get_shape()[1]) - 1, axis = 1)
+        last_output = tf.gather(output, indices = tf.shape(output)[1] - 1, axis = 1)
         logits = tf.layers.dense(last_output, params.number_of_tags)
 
         # print('logits:',logits)
