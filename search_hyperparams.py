@@ -5,6 +5,7 @@ import os
 from subprocess import check_call
 import sys
 import itertools
+import random
 
 from model.utils import Params
 
@@ -51,11 +52,12 @@ if __name__ == "__main__":
     params = Params(json_path)
 
     # Perform hypersearch over multiple parameters
-    ls_learning_rates = [1e-3, 1e-2, 1e-1]
-    ls_reg_strengths = [1e-2, 1e-1]
+    random.seed(0)
+    ls_learning_rates = [1e-4,1e-3, 1e-2, 1e-1]#, 1e-2, 1e-1]
+    ls_reg_strengths = [1e-2]#, 1e-1]
     ls_embedding_sizes = [150]
     ls_lstm_num_units = [25]
-    ls_dropout_rates = [.3, .5, .7]
+    ls_dropout_rates = [.3]#, .5, .7]
 
     # Define permutations of above hyperparameters
     lsHPs = [ls_learning_rates,ls_reg_strengths,ls_embedding_sizes,ls_lstm_num_units, ls_dropout_rates]
@@ -81,7 +83,7 @@ if __name__ == "__main__":
 
         # Modify the relevant parameter in params
         params.learning_rate = learning_rate
-        params.reg_stregnth = reg_strength
+        params.reg_strength = reg_strength
         params.embedding_size = embedding_size
         params.lstm_num_units = lstm_num_units
         params.dropout_rate = dropout_rate
