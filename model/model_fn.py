@@ -26,7 +26,7 @@ def build_model(mode, inputs, params):
         # Apply LSTM over the embeddings
         lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(params.lstm_num_units)
         # Output is sequence of outputs for each cell, state is the final state
-        output, state  = tf.nn.dynamic_rnn(lstm_cell, sentence, dtype=tf.float32)
+        output, state  = tf.nn.dynamic_rnn(lstm_cell, sentence, dtype=tf.float32, sequence_length = inputs['sentence_lengths'])
         # output, state  = tf.nn.dynamic_rnn(lstm_cell, sentence, dtype=tf.float32)
 
         # Take mean of all cell outputs
@@ -39,10 +39,10 @@ def build_model(mode, inputs, params):
         # Compute logits from the last cell output of the LSTM
         # Try this and see if it works..?
         # Try to call last relevent output instead of last (padded) output
-        # last_output = tf.gather(output, indices = tf.shape(output)[1] - 1, axis = 1)
-        last_output = tf.gather(output, indices = inputs['sentence_lengths'] - 1, axis = 1)
+        last_output = tf.gather(output, indices = tf.shape(output)[1] - 1, axis = 1)
         logits = tf.layers.dense(last_output, params.number_of_tags)
-
+        # last_output = tf.gather(output, indices = inputs['sentence_lengths'] - 1, axis = 1)
+        # logits = tf.layers.dense(last_output, params.number_of_tags)
         # print('logits:',logits)
 
 
