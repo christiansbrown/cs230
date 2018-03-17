@@ -162,7 +162,7 @@ pkl_preds = prediction_vals[0]
 pkl_labels = labels_vals[0]
 print(np.shape(sentence_vals))
 print(np.shape(output_vals))
-print(np.shape(label_vals))
+print(np.shape(labels_vals))
 pkl_sentences = sentence_vals[0]
 
 print(np.shape(pkl_sentences))
