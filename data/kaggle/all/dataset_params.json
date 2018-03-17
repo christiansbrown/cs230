@@ -1,0 +1,9 @@
+{
+    "dataset_size": 13162,
+    "vocab_size": 66766,
+    "number_of_sentiments": 3,
+    "number_of_eras": 4,
+    "pad_word": "<pad>",
+    "pad_tag": "O",
+    "num_oov_buckets": 1
+}
