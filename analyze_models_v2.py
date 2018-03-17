@@ -38,8 +38,16 @@ parser.add_argument('--model_dir', default='experiments/base_model',
 parser.add_argument('--data_dir', default='data/kaggle/all', help="Directory containing the dataset")
 parser.add_argument('--restore_from', default='best_weights',
                     help="Subdirectory of model dir or file containing the weights")
+parser.add_argument('--is_toy', default='False')
 
 args = parser.parse_args()
+
+if args.is_toy == 'False':
+	toy = ''
+elif args.is_toy == 'True':
+	toy = '_small'
+else:
+	raise ValueError("Please specify is_toy as either 'True' or 'False'")
 
 # Load parameters of model
 sentiment_model_path = os.path.join(args.model_dir, 'params.json')
@@ -48,7 +56,7 @@ params_sentiment = Params(sentiment_model_path)
 
 # Load parameters from the dataset (sizes, etc) into params
 # data_params_path = os.path.join(args.data_dir, 'dataset_params_small.json')
-data_params_path = os.path.join(args.data_dir, 'dataset_params.json')
+data_params_path = os.path.join(args.data_dir, 'dataset_params{}.json'.format(toy))
 params_sentiment.update(data_params_path)
 num_oov_buckets = params_sentiment.num_oov_buckets
 
@@ -57,13 +65,13 @@ params_sentiment.number_of_tags = params_sentiment.number_of_sentiments
 
 # Get paths for vocabularies and dataset
 # path_words = os.path.join(args.data_dir, 'words_small.txt')
-path_words = os.path.join(args.data_dir, 'words.txt')
+path_words = os.path.join(args.data_dir, 'words{}.txt'.format(toy))
 path_sentiment_tags = os.path.join(args.data_dir, 'sentiment_tags.txt')
 # path_era_tags = os.path.join(args.data_dir, 'era_tags.txt')
 # path_reviews = os.path.join(args.data_dir, 'reviews_small.txt')
-path_reviews = os.path.join(args.data_dir, 'reviews.txt')
-path_sentiments = os.path.join(args.data_dir, 'sentiments_small.txt')
-path_sentiments = os.path.join(args.data_dir, 'sentiments.txt')
+path_reviews = os.path.join(args.data_dir, 'reviews{}.txt'.format(toy))
+path_sentiments = os.path.join(args.data_dir, 'sentiments{}.txt'.format(toy))
+# path_sentiments = os.path.join(args.data_dir, 'sentiments.txt')
 # path_eras = os.path.join(args.data_dir, 'eras_small.txt')
 
 # Load vocabularies
@@ -116,6 +124,7 @@ with tf.Session() as sess:
 	update_metrics = model_spec_sentiment['update_metrics']
 	eval_metrics= model_spec_sentiment['metrics']
 	outputs = model_spec_sentiment['outputs']
+	predictions = model_spec_sentiment['predictions']
 
 	global_step = tf.train.get_global_step()
 
@@ -125,10 +134,12 @@ with tf.Session() as sess:
 
 	# Compute metrics over the dataset
 	output_vals = []
+	precition_vals = []
 	for i in range(num_steps):
 		print('step number:',i)
 		sess.run(update_metrics)
 		output_vals.append(sess.run(outputs))
+		prediction_vals.append(sess.run(predictions))
 
 	# Extract values for metrics
 	metrics_values = {k: v[0] for k, v in eval_metrics.items()}
@@ -145,7 +156,7 @@ print(np.shape(output_vals))
 
 # write to cPickle
 # pickle.dump(output_vals, open( "output_vals_small.pkl", "wb" ) )
-pickle.dump(output_vals, open( "output_vals.pkl", "wb" ) )
+pickle.dump(output_vals[0], open( "output_vals.pkl", "wb" ) )
 
 # read from cPickle
 # output_vals = pickle.load( open( "output_vals_small.pkl", "rb" ) )
