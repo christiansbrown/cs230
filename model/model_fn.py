@@ -26,7 +26,9 @@ def build_model(mode, inputs, params):
         # Apply LSTM over the embeddings
         lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(params.lstm_num_units)
         # Output is sequence of outputs for each cell, state is the final state
-        output, state  = tf.nn.dynamic_rnn(lstm_cell, sentence, dtype=tf.float32, sequence_length = inputs['sentence_lengths'])
+        # output, state  = tf.nn.dynamic_rnn(lstm_cell, sentence, dtype=tf.float32, sequence_length = inputs['sentence_lengths'])
+        output, state  = tf.nn.dynamic_rnn(lstm_cell, sentence, dtype=tf.float32)
+
         # output, state  = tf.nn.dynamic_rnn(lstm_cell, sentence, dtype=tf.float32)
 
         # Take mean of all cell outputs
@@ -110,6 +112,8 @@ def model_fn(mode, inputs, params, reuse=False):
     with tf.variable_scope("metrics"):
         metrics = {
             'accuracy': tf.metrics.accuracy(labels=labels, predictions=predictions),
+            'precision': tf.metrics.precision(labels=labels, predictions=predictions),
+            'recall': tf.metrics.recall(labels=labels, predictions=predictions),
             'loss': tf.metrics.mean(loss)
         }
 
