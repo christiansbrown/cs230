@@ -161,8 +161,15 @@ pkl_output = output_vals[0]
 pkl_preds = prediction_vals[0]
 pkl_labels = labels_vals[0]
 print(np.shape(sentence_vals))
-exit(0)
+print(np.shape(output_vals))
+print(np.shape(label_vals))
 pkl_sentences = sentence_vals[0]
+
+print(np.shape(pkl_sentences))
+print(np.shape(pkl_output))
+
+
+exit(0)
 
 # write to cPickle
 # pickle.dump(output_vals, open( "output_vals_small.pkl", "wb" ) 
