@@ -157,19 +157,11 @@ with tf.Session() as sess:
 	# Extract values for outputs
 	# outputs = sess.run(outputs)
 
-# Dump outputs into a csv for testing....
-print(np.shape(output_vals))
-print(np.shape(output_vals[0]))
-print(np.shape(prediction_vals))
-print(np.shape(prediction_vals[0]))
-print(np.shape(labels_vals))
-print(np.shape(labels_vals[0]))
-print(np.shape(sentence_vals))
-print(np.shape(sentence_vals[0]))
-
 pkl_output = output_vals[0]
 pkl_preds = prediction_vals[0]
 pkl_labels = labels_vals[0]
+print(np.shape(sentence_vals))
+exit(0)
 pkl_sentences = sentence_vals[0]
 
 # write to cPickle
