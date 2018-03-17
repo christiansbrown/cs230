@@ -126,7 +126,7 @@ with tf.Session() as sess:
 	outputs = model_spec_sentiment['outputs']
 	predictions = model_spec_sentiment['predictions']
 	labels = model_spec_sentiment['labels']
-	sentences = model_spec_senitment['sentence']
+	sentences = model_spec_sentiment['sentence']
 
 	global_step = tf.train.get_global_step()
 
