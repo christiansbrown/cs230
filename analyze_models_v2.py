@@ -125,6 +125,9 @@ with tf.Session() as sess:
 	eval_metrics= model_spec_sentiment['metrics']
 	outputs = model_spec_sentiment['outputs']
 	predictions = model_spec_sentiment['predictions']
+	labels = inputs_sentiment['labels']
+	sentences = inputs_sentiment['sentence']
+
 
 	global_step = tf.train.get_global_step()
 
@@ -135,11 +138,16 @@ with tf.Session() as sess:
 	# Compute metrics over the dataset
 	output_vals = []
 	prediction_vals = []
+	labels_vals = []
+	sentence_vals = []
 	for i in range(num_steps):
 		print('step number:',i)
 		sess.run(update_metrics)
 		output_vals.append(sess.run(outputs))
 		prediction_vals.append(sess.run(predictions))
+		labels_vals.append(sess.run(labels))
+		sentence_vals.append(sess.run(sentences))
+		break
 
 	# Extract values for metrics
 	metrics_values = {k: v[0] for k, v in eval_metrics.items()}
@@ -151,7 +159,13 @@ with tf.Session() as sess:
 
 # Dump outputs into a csv for testing....
 print(np.shape(output_vals))
+print(np.shape(output_vals[0]))
 print(np.shape(prediction_vals))
+print(np.shape(prediction_vals[0]))
+print(np.shape(labels_vals))
+print(np.shape(labels_vals[0]))
+print(np.shape(sentence_vals))
+print(np.shape(sentence_vals[0]))
 
 
 # write to cPickle
