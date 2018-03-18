@@ -155,7 +155,7 @@ with tf.Session() as sess:
 		output_vals.append(step_output)
 		prediction_vals.append(step_pred)
 		labels_vals.append(step_labels)
-		sentence_vals.append(step_senteces)
+		sentence_vals.append(step_sentences)
 
 		if i > 5:
 			break
