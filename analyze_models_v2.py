@@ -204,6 +204,7 @@ pickle.dump(pkl_sentences, open( "sentence_vals.pkl", "wb" ) )
 
 # Try and figure out the word mapping...
 test_review_ids = sentence_vals[0][0]
+test_review_ids = tf.constant(test_review_ids, tf.int32)
 
 test_review = words.lookup(test_review_ids)
 print(test_review)
