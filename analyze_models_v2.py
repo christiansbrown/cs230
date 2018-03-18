@@ -139,6 +139,7 @@ with tf.Session() as sess:
 	prediction_vals = []
 	labels_vals = []
 	sentence_vals = []
+	# Maybe the shape is different so I am returning something different...?
 
 	for i in range(num_steps):
 		print('step number:',i)
@@ -162,6 +163,20 @@ pkl_output = output_vals[2]
 pkl_preds = prediction_vals[2]
 pkl_labels = labels_vals[2]
 pkl_sentences = sentence_vals[2]
+
+print(output_vals)
+print(prediction_vals)
+print(labels_vals)
+print(sentence_vals)
+
+print(pkl_output)
+print(pkl_preds)
+print(pkl_labels)
+print(pkl_sentences)
+
+exit(0)
+
+
 print('butthole!')
 # exit(0)
 
