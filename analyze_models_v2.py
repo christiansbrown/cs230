@@ -148,7 +148,7 @@ with tf.Session() as sess:
 		prediction_vals.append(sess.run(predictions))
 		labels_vals.append(sess.run(labels))
 		sentence_vals.append(sess.run(sentences))
-		if i > 10:
+		if i > 5:
 			break
 
 	# Extract values for metrics
@@ -160,15 +160,15 @@ with tf.Session() as sess:
 	# outputs = sess.run(outputs)
 
 # Convert to arrays?
-output_vals = np.array(output_vals)
-prediction_vals = np.array(prediction_vals)
-labels_vals = np.array(labels_vals)
-sentence_vals = np.array(sentence_vals)
+# output_vals = np.array(output_vals)
+# prediction_vals = np.array(prediction_vals)
+# labels_vals = np.array(labels_vals)
+# sentence_vals = np.array(sentence_vals)
 
-pkl_output = output_vals[2]
-pkl_preds = prediction_vals[2]
-pkl_labels = labels_vals[2]
-pkl_sentences = sentence_vals[2]
+pkl_output = output_vals#[2]
+pkl_preds = prediction_vals#[2]
+pkl_labels = labels_vals#[2]
+pkl_sentences = sentence_vals#[2]
 
 print(np.shape(output_vals))
 print(np.shape(prediction_vals))
@@ -180,7 +180,7 @@ print(np.shape(pkl_preds))
 print(np.shape(pkl_labels))
 print(np.shape(pkl_sentences))
 
-exit(0)
+# exit(0)
 
 
 print('butthole!')
