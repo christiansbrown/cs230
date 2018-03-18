@@ -164,15 +164,15 @@ pkl_preds = prediction_vals[2]
 pkl_labels = labels_vals[2]
 pkl_sentences = sentence_vals[2]
 
-print(output_vals)
-print(prediction_vals)
-print(labels_vals)
-print(sentence_vals)
+print(np.shape(output_vals))
+print(np.shape(prediction_vals))
+print(np.shape(labels_vals))
+print(np.shape(sentence_vals))
 
-print(pkl_output)
-print(pkl_preds)
-print(pkl_labels)
-print(pkl_sentences)
+print(np.shape(pkl_output))
+print(np.shape(pkl_preds))
+print(np.shape(pkl_labels))
+print(np.shape(pkl_sentences))
 
 exit(0)
 
