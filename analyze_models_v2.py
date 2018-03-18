@@ -192,15 +192,21 @@ pkl_sentences = sentence_vals#[2]
 # exit(0)
 
 
-print('butthole!')
+print(' - Done!')
 # exit(0)
 
-# write to pickle
+# write to pickle for tentative analysis
 # pickle.dump(output_vals, open( "output_vals_small.pkl", "wb" ) 
 pickle.dump(pkl_output, open( "output_vals.pkl", "wb" ) )
 pickle.dump(pkl_preds, open( "prediction_vals.pkl", "wb" ) )
 pickle.dump(pkl_labels, open( "labels_vals.pkl", "wb" ) )
 pickle.dump(pkl_sentences, open( "sentence_vals.pkl", "wb" ) )
+
+# pickle mapping as well to analyze locally..
+pickle.dump(words, open( "word_map.pkl", "wb"))
+pickle.dump(sentiments, open( "sentiments_map.pkl", "wb"))
+
+
 
 # TODO: Dump a few other useful things as well
 
