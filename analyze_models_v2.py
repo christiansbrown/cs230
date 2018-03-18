@@ -202,9 +202,11 @@ pickle.dump(pkl_preds, open( "prediction_vals.pkl", "wb" ) )
 pickle.dump(pkl_labels, open( "labels_vals.pkl", "wb" ) )
 pickle.dump(pkl_sentences, open( "sentence_vals.pkl", "wb" ) )
 
-# pickle mapping as well to analyze locally..
-pickle.dump(words, open( "word_map.pkl", "wb"))
-pickle.dump(sentiments, open( "sentiments_map.pkl", "wb"))
+# Try and figure out the word mapping...
+test_review_ids = sentence_vals[0][0]
+
+test_review = words.lookup(test_review_ids)
+print(test_review)
 
 
 
