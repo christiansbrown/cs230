@@ -159,6 +159,12 @@ with tf.Session() as sess:
 	# Extract values for outputs
 	# outputs = sess.run(outputs)
 
+# Convert to arrays?
+output_vals = np.array(output_vals)
+prediction_vals = np.array(prediction_vals)
+labels_vals = np.array(labels_vals)
+sentence_vals = np.array(sentence_vals)
+
 pkl_output = output_vals[2]
 pkl_preds = prediction_vals[2]
 pkl_labels = labels_vals[2]
