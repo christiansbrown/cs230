@@ -6,6 +6,7 @@ from subprocess import check_call
 import sys
 import itertools
 import random
+import numpy as np
 
 from model.utils import Params
 
@@ -53,7 +54,9 @@ if __name__ == "__main__":
 
     # Perform hypersearch over multiple parameters
     random.seed(0)
-    ls_learning_rates = [1e-4,1e-3, 1e-2, 1e-1]#, 1e-2, 1e-1]
+    # ls_learning_rates = [1e-4,1e-3, 1e-2, 1e-1]#, 1e-2, 1e-1]
+    p = np.random.uniform(low=0, high=4, size=(10,))
+    ls_learning_rates = 10**-p
     ls_reg_strengths = [1e-2]#, 1e-1]
     ls_embedding_sizes = [150]
     ls_lstm_num_units = [25]
@@ -89,7 +92,7 @@ if __name__ == "__main__":
         params.dropout_rate = dropout_rate
 
         # Launch job (name has to be unique)
-        # job_name = "learning_rate_{}".format(learning_rate)
+        job_name = "learning_rate_{}".format(learning_rate)
         # job_name = "HP_permutation_{}".format(counter)
-        job_name = "LR_{}_RS_{}_ES_{}_LNU_{}_DR_{}".format(learning_rate,reg_strength,embedding_size,lstm_num_units, dropout_rate)
+        # job_name = "LR_{}_RS_{}_ES_{}_LNU_{}_DR_{}".format(learning_rate,reg_strength,embedding_size,lstm_num_units, dropout_rate)
         launch_training_job(args.parent_dir, args.data_dir, args.objective, job_name, params)
