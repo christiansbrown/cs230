@@ -145,7 +145,7 @@ with tf.Session() as sess:
 		print('step number:',i)
 		sess.run(update_metrics)
 
-		step_output, step_pred, step_labels, step_sentences = sess.run(outputs, predictions, labels, sentences)
+		step_output, step_pred, step_labels, step_sentences = sess.run([outputs, predictions, labels, sentences])
 
 		# output_vals.append(sess.run(outputs))
 		# prediction_vals.append(sess.run(predictions))
