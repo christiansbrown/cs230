@@ -144,10 +144,19 @@ with tf.Session() as sess:
 	for i in range(num_steps):
 		print('step number:',i)
 		sess.run(update_metrics)
-		output_vals.append(sess.run(outputs))
-		prediction_vals.append(sess.run(predictions))
-		labels_vals.append(sess.run(labels))
-		sentence_vals.append(sess.run(sentences))
+
+		step_output, step_pred, step_labels, step_sentences = sess.run(outputs, predictions, labels, sentences)
+
+		# output_vals.append(sess.run(outputs))
+		# prediction_vals.append(sess.run(predictions))
+		# labels_vals.append(sess.run(labels))
+		# sentence_vals.append(sess.run(sentences))
+
+		output_vals.append(step_output)
+		prediction_vals.append(step_pred)
+		labels_vals.append(step_labels)
+		sentence_vals.append(step_senteces)
+
 		if i > 5:
 			break
 
