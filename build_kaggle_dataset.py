@@ -100,7 +100,8 @@ def process_dataset(dataset):
             review = regexBrackets.sub(' ',review)
             review = review.replace("'",'')
             reviewWords = nltk.word_tokenize(review)
-            reviewWords = [word for word in reviewWords if word.isalpha()]
+            
+            reviewWords = [word.lower() for word in reviewWords if word.isalpha()]
     #        review = entry[-1]
     #        review = regexAlpha.sub(' ', review) 
     #        review = regexBrackets.sub(' ',review)

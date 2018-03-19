@@ -31,6 +31,46 @@ from model.model_fn import model_fn
 from model.input_fn import input_fn
 from model.input_fn import load_dataset_from_text
 
+# Define keywords function (change as necessary)
+# Finds keywords given a sequence of similarities in sequence
+def find_keywords(similarities):
+    """
+    Returns keyPoints: [[word_position, similarity], [,] ..]
+    Positions and similarities of words that are possible keywords
+    """
+    
+    # Initialize lists to hold some useful values
+    first_derivs = []
+    second_derivs = []
+    d_first_derivs = [] # difference in first derivatives
+    
+    for i in range(0,len(similarities)-2):
+        
+        df1 = similarities[i+1] - similarities[i]
+        df2 = similarities[i+2] - 2*similarities[i+1] + similarities[i]
+        
+        first_derivs.append(df1)
+        second_derivs.append(df2)
+        
+        if i > 0:
+            
+            d_df1 = abs(first_derivs[i] - first_derivs[i-1])
+            d_first_derivs.append(d_df1)            
+    
+    # Try keywords ideas here
+    keyPoints = []    
+    intThresh = .01*max(similarities)
+    count = 0
+
+    for i, first_deriv in reversed(list(enumerate(first_derivs))):
+        
+        if abs(first_deriv) > intThresh and count <= 10:
+            
+            keyPoints.append([i, similarities[i]])
+            count += 1
+        
+    return keyPoints
+
 # For inputting arguments from console
 parser = argparse.ArgumentParser()
 parser.add_argument('--model_dir', default='experiments/base_model',
@@ -202,12 +242,88 @@ pickle.dump(pkl_preds, open( "prediction_vals.pkl", "wb" ) )
 pickle.dump(pkl_labels, open( "labels_vals.pkl", "wb" ) )
 pickle.dump(pkl_sentences, open( "sentence_vals.pkl", "wb" ) )
 
-# Try and figure out the word mapping...
-test_review_ids = sentence_vals[0][0]
-test_review_ids = tf.constant(test_review_ids, tf.int32)
 
-test_review = words.lookup(test_review_ids)
-print(test_review)
+#%% Putting it all together - analysis pipeline
+      
+# Read in files from pickle (shouldn't be necessary in AWS)  
+# Nesting: [epochs, batch_size, values]
+#       - Values: seq length/activations, labels, etc.
+output_vals = pickle.load(open("output_vals.pkl","rb"))
+pred_vals = pickle.load(open("prediction_vals.pkl","rb"))
+label_vals = pickle.load(open("labels_vals.pkl","rb"))
+sentence_vals = pickle.load(open("sentence_vals.pkl","rb"))
+
+# Obtain mapping from word_id to words
+word_map = {}
+vocab_path = 'data/kaggle/all/words.txt' # Change as necessary
+with open(vocab_path) as f:
+    word_map = {i:word.strip() for i, word in enumerate(f,1)}
+
+# Iterate through data and build up counters
+good_keywords = Counter() 
+bad_keywords = Counter()   
+    
+# Outputs for current epoch [batch_size, max_seq_length, activations]   
+for epoch_id, epoch_outputs in enumerate(output_vals):
+
+    print('Epoch {} of {}'.format(epoch_id+1, len(output_vals)))
+    
+    # Obtain current epochs predictions, labels, tokenized reviews
+    epoch_labels = label_vals[epoch_id]
+    epoch_preds = pred_vals[epoch_id]
+    epoch_reviews = sentence_vals[epoch_id]
+    
+    correct_count = 0
+    
+    # Sequence of activations for each example in batch [max_seq_length, acts]
+    for review_id, activations in enumerate(epoch_outputs):     
+    
+        # Obtain current reviews preds, labels, tokenized review
+        label = epoch_labels[review_id]
+        pred = epoch_preds[review_id]
+        review = epoch_reviews[review_id] # Sequence of integer IDs
+        
+        # Obtain last activation
+        similarities = []
+        last_activation = activations[-1]
+        
+        # Index of current activation, h-dimensional activation for current wrd
+        for idx, curr_activation in enumerate(activations):
+    
+            # Compute similarity
+            similarity = cosine(curr_activation, last_activation)
+            similarities.append(similarity)
+            
+        # Investigate keywords if model predicted correct
+        
+        if label == pred:
+            correct_count += 1
+        
+        if True:#label == pred:
+            
+            
+            # Identify keywords
+            keyPoints = find_keywords(similarities)
+            word_positions, _ = zip(*keyPoints)
+            
+            # Find associated word_ids and words
+            word_ids = [review[i] for i in word_positions]
+            words = [word_map[k+1] for k in word_ids]            
+            
+            
+            # Update good or bad keywords counter depending on result
+            if label == 0:
+                bad_keywords.update(words)
+            else:
+                good_keywords.update(words)
+
+    print(' Predicted {} of {} sentiments correctly'.format(
+                                        correct_count+1, len(epoch_outputs)))
+
+    # Pickle the counter for analysis?
+    pickle.dump(bad_keywords, open( "bad_keywords.pkl", "wb"))
+    pickle.dump(good_keywords, open( "good_keywords.pkl", "wb"))    
+    
 
 
 

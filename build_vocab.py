@@ -16,7 +16,7 @@ parser.add_argument('--data_dir', default='data/kaggle', help="Directory contain
 parser.add_argument('--objective', default = 'sentiment', 
                     help="Define classification objective of model as either 'sentiment' or 'era'")
 parser.add_argument('--is_split', default='True', help="Use all data or not? True/False")
-# parser.add_argument('--toy', default='False', help="True/False to use smaller dataset")
+parser.add_argument('--is_toy', default='False', help="True/False to use smaller dataset")
 
 # Hyper parameters for the vocab
 NUM_OOV_BUCKETS = 1 # number of buckets (= number of ids) for unknown words
@@ -86,6 +86,13 @@ if __name__ == '__main__':
     else:
         raise ValueError("Please define is_split as either 'True' or 'False'")
 
+    if args.is_toy == 'False':
+        toy = ''
+    elif args.is_toy == 'True':
+        toy = '_small'
+    else:
+        raise ValueError("Please define is_toy as either 'True' or 'False'")
+
     # Build word vocab with train and test datasets (reviews)
     print("Building word vocabulary...")
     words = Counter()
@@ -97,7 +104,7 @@ if __name__ == '__main__':
         size_test_sentences = update_vocab(os.path.join(args.data_dir, 'test/reviews.txt'), words)
     else:
         print(' - all reviews')
-        size_reviews = update_vocab(os.path.join(args.data_dir, 'reviews.txt'), words)
+        size_reviews = update_vocab(os.path.join(args.data_dir, 'reviews{}.txt'.format(toy)), words)
     print("- done.")
 
     # Build tag vocab with train and test datasets with inputted objective
@@ -126,9 +133,9 @@ if __name__ == '__main__':
     else:
         print("Building vocabulary all folder...")
         sentiment_tags = Counter()
-        size_sentiment_tags = update_vocab(os.path.join(args.data_dir, 'sentiments.txt'), sentiment_tags)
+        size_sentiment_tags = update_vocab(os.path.join(args.data_dir, 'sentiments{}.txt'.format(toy)), sentiment_tags)
         era_tags = Counter()
-        size_era_tags = update_vocab(os.path.join(args.data_dir, 'eras.txt'), era_tags)
+        size_era_tags = update_vocab(os.path.join(args.data_dir, 'eras{}.txt'.format(toy)), era_tags)
         assert size_reviews == size_sentiment_tags
         assert size_reviews == size_era_tags
         print('-done')
@@ -177,8 +184,8 @@ if __name__ == '__main__':
     if is_split:
         save_vocab_to_txt_file(tags, os.path.join(args.data_dir, 'tags.txt'))
     else:
-        save_vocab_to_txt_file(sentiment_tags, os.path.join(args.data_dir, 'sentiment_tags.txt'))
-        save_vocab_to_txt_file(era_tags, os.path.join(args.data_dir, 'era_tags.txt'))
+        save_vocab_to_txt_file(sentiment_tags, os.path.join(args.data_dir, 'sentiment_tags{}.txt'.format(toy)))
+        save_vocab_to_txt_file(era_tags, os.path.join(args.data_dir, 'era_tags{}.txt'.format(toy)))
 #    save_vocab_to_txt_file(sentiments, os.path.join(args.data_dir, 'sentiments.txt'))
 #    save_vocab_to_txt_file(eras, os.path.join(args.data_dir, 'eras.txt'))
     print("- done.")
@@ -214,7 +221,7 @@ if __name__ == '__main__':
             'num_oov_buckets': NUM_OOV_BUCKETS
         }
 
-    save_dict_to_json(sizes, os.path.join(args.data_dir, 'dataset_params.json'))
+    save_dict_to_json(sizes, os.path.join(args.data_dir, 'dataset_params{}.json'.format(toy)))
 
     # Logging sizes
     to_print = "\n".join("- {}: {}".format(k, v) for k, v in sizes.items())

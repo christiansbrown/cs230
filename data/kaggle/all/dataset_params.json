@@ -1,6 +1,6 @@
 {
-    "dataset_size": 13162,
-    "vocab_size": 66766,
+    "dataset_size": 13023,
+    "vocab_size": 74440,
     "number_of_sentiments": 3,
     "number_of_eras": 4,
     "pad_word": "<pad>",
