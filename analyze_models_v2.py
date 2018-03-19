@@ -30,7 +30,7 @@ from model.utils import Params
 from model.model_fn import model_fn
 from model.input_fn import input_fn
 from model.input_fn import load_dataset_from_text
-from collections import Counter()
+from collections import Counter
 
 # Define keywords function (change as necessary)
 # Finds keywords given a sequence of similarities in sequence
