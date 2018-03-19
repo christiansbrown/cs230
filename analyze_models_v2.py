@@ -178,13 +178,13 @@ with tf.Session() as sess:
 
 	# Compute metrics over the dataset
 	output_vals = []
-	prediction_vals = []
-	labels_vals = []
+	pred_vals = []
+	label_vals = []
 	sentence_vals = []
 	# Maybe the shape is different so I am returning something different...?
 
 	for i in range(num_steps):
-		print('step number:',i)
+		print('step number: {}/{}'.format(i+1,num_steps))
 		sess.run(update_metrics)
 
 		step_output, step_pred, step_labels, step_sentences = sess.run([outputs, predictions, labels, sentences])
@@ -195,8 +195,8 @@ with tf.Session() as sess:
 		# sentence_vals.append(sess.run(sentences))
 
 		output_vals.append(step_output)
-		prediction_vals.append(step_pred)
-		labels_vals.append(step_labels)
+		pred_vals.append(step_pred)
+		label_vals.append(step_labels)
 		sentence_vals.append(step_sentences)
 
 		if i > 5:
