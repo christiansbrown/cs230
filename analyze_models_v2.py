@@ -217,8 +217,8 @@ with tf.Session() as sess:
 # sentence_vals = np.array(sentence_vals)
 
 pkl_output = output_vals#[2]
-pkl_preds = prediction_vals#[2]
-pkl_labels = labels_vals#[2]
+pkl_preds = pred_vals#[2]
+pkl_labels = label_vals#[2]
 pkl_sentences = sentence_vals#[2]
 
 # print(np.shape(output_vals))
@@ -240,8 +240,8 @@ print(' - Done!')
 # write to pickle for tentative analysis
 # pickle.dump(output_vals, open( "output_vals_small.pkl", "wb" ) 
 pickle.dump(pkl_output, open( "output_vals.pkl", "wb" ) )
-pickle.dump(pkl_preds, open( "prediction_vals.pkl", "wb" ) )
-pickle.dump(pkl_labels, open( "labels_vals.pkl", "wb" ) )
+pickle.dump(pkl_preds, open( "pred_vals.pkl", "wb" ) )
+pickle.dump(pkl_labels, open( "label_vals.pkl", "wb" ) )
 pickle.dump(pkl_sentences, open( "sentence_vals.pkl", "wb" ) )
 
 
