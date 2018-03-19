@@ -31,6 +31,7 @@ from model.model_fn import model_fn
 from model.input_fn import input_fn
 from model.input_fn import load_dataset_from_text
 from collections import Counter
+from scipy.spatial.distance import cosine
 
 # Define keywords function (change as necessary)
 # Finds keywords given a sequence of similarities in sequence
@@ -198,6 +199,9 @@ with tf.Session() as sess:
 		labels_vals.append(step_labels)
 		sentence_vals.append(step_sentences)
 
+		if i > 5:
+			break
+
 	# Extract values for metrics
 	metrics_values = {k: v[0] for k, v in eval_metrics.items()}
 	metrics_val = sess.run(metrics_values)
@@ -246,10 +250,10 @@ pickle.dump(pkl_sentences, open( "sentence_vals.pkl", "wb" ) )
 # Read in files from pickle (shouldn't be necessary in AWS)  
 # Nesting: [epochs, batch_size, values]
 #       - Values: seq length/activations, labels, etc.
-output_vals = pickle.load(open("output_vals.pkl","rb"))
-pred_vals = pickle.load(open("prediction_vals.pkl","rb"))
-label_vals = pickle.load(open("labels_vals.pkl","rb"))
-sentence_vals = pickle.load(open("sentence_vals.pkl","rb"))
+# output_vals = pickle.load(open("output_vals.pkl","rb"))
+# pred_vals = pickle.load(open("prediction_vals.pkl","rb"))
+# label_vals = pickle.load(open("labels_vals.pkl","rb"))
+# sentence_vals = pickle.load(open("sentence_vals.pkl","rb"))
 
 # Obtain mapping from word_id to words
 word_map = {}
