@@ -30,6 +30,7 @@ from model.utils import Params
 from model.model_fn import model_fn
 from model.input_fn import input_fn
 from model.input_fn import load_dataset_from_text
+from collections import Counter()
 
 # Define keywords function (change as necessary)
 # Finds keywords given a sequence of similarities in sequence
@@ -196,9 +197,6 @@ with tf.Session() as sess:
 		prediction_vals.append(step_pred)
 		labels_vals.append(step_labels)
 		sentence_vals.append(step_sentences)
-
-		if i > 5:
-			break
 
 	# Extract values for metrics
 	metrics_values = {k: v[0] for k, v in eval_metrics.items()}
