@@ -94,50 +94,55 @@ else:
 # Load parameters of model
 sentiment_model_path = os.path.join(args.model_dir, 'params.json')
 params_sentiment = Params(sentiment_model_path)
-
+era_model_path = os.path.join(args.model_dir, 'params.json') # CHANGE THIS
+params_era = Params(era_model_path)
 
 # Load parameters from the dataset (sizes, etc) into params
 # data_params_path = os.path.join(args.data_dir, 'dataset_params_small.json')
 data_params_path = os.path.join(args.data_dir, 'dataset_params{}.json'.format(toy))
 params_sentiment.update(data_params_path)
-num_oov_buckets = params_sentiment.num_oov_buckets
+num_oov_buckets = params_sentiment.num_oov_buckets 
 
 # Update model params to include number of tags attribute
 params_sentiment.number_of_tags = params_sentiment.number_of_sentiments
+params_era.number_of_tags = params_era.number_of_eras
 
 # Get paths for vocabularies and dataset
 # path_words = os.path.join(args.data_dir, 'words_small.txt')
 path_words = os.path.join(args.data_dir, 'words{}.txt'.format(toy))
 path_sentiment_tags = os.path.join(args.data_dir, 'sentiment_tags.txt')
-# path_era_tags = os.path.join(args.data_dir, 'era_tags.txt')
+path_era_tags = os.path.join(args.data_dir, 'era_tags.txt')
 # path_reviews = os.path.join(args.data_dir, 'reviews_small.txt')
 path_reviews = os.path.join(args.data_dir, 'reviews{}.txt'.format(toy))
 path_sentiments = os.path.join(args.data_dir, 'sentiments{}.txt'.format(toy))
 # path_sentiments = os.path.join(args.data_dir, 'sentiments.txt')
-# path_eras = os.path.join(args.data_dir, 'eras_small.txt')
+path_eras = os.path.join(args.data_dir, 'eras{}.txt'.format(toy))
 
 # Load vocabularies
 words = tf.contrib.lookup.index_table_from_file(path_words, num_oov_buckets=num_oov_buckets)
 sentiments = tf.contrib.lookup.index_table_from_file(path_sentiment_tags)
-# eras = tf.contrib.lookup.index_table_from_file(path_era_tags)
+eras = tf.contrib.lookup.index_table_from_file(path_era_tags)
 
 # Create the input data pipeline
 reviews = load_dataset_from_text(path_reviews,words)
 review_sentiments = load_dataset_from_text(path_sentiments,sentiments, isLabels=True)
-# review_eras = load_dataset_from_text(path_eras,eras)
+review_eras = load_dataset_from_text(path_eras,eras, isLabels=True)
 
 # Specify other parameters for the dataset and the model
 params_sentiment.id_pad_word = words.lookup(tf.constant(params_sentiment.pad_word))
 params_sentiment.id_pad_tag = words.lookup(tf.constant(params_sentiment.pad_tag))
+params_era.id_pad_word = words.lookup(tf.constant(params_era.pad_word))
+params_era.id_pad_tag = words.lookup(tf.constant(params_era.pad_tag))
+
 
 # Create the iterator over the test set
 inputs_sentiment = input_fn('eval', reviews, review_sentiments, params_sentiment)
-# inputs_eras = input_fn('eval', reviews, review_eras, params_era)
+inputs_eras = input_fn('eval', reviews, review_eras, params_era)
 
 # Define the model
 print('Creating sentiment and era models...')
 model_spec_sentiment = model_fn('eval', inputs_sentiment, params_sentiment, reuse=False)
-# model_spec_era = model_fn('eval', inputs_era, params_era, reuse=False)
+model_spec_era = model_fn('eval', inputs_era, params_era, reuse=False)
 print('Done')
 
 # Evaluate the model... 
@@ -198,6 +203,10 @@ with tf.Session() as sess:
 		pred_vals.append(step_pred)
 		label_vals.append(step_labels)
 		sentence_vals.append(step_sentences)
+
+		# Break statement in here for debugging purposes
+		if i > 5:
+			break
 
 	# Extract values for metrics
 	metrics_values = {k: v[0] for k, v in eval_metrics.items()}
