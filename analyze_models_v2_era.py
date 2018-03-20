@@ -102,7 +102,9 @@ params_era.update(data_params_path)
 num_oov_buckets = params_era.num_oov_buckets 
 
 # Update model params to include number of tags attribute
-params_era.number_of_tags = params_era.number_of_eras
+# params_era.number_of_tags = params_era.number_of_eras
+# Try something dumb..?
+params_era.number_of_tags = params_era.number_of_sentiments
 
 # Get paths for vocabularies and dataset
 # path_words = os.path.join(args.data_dir, 'words_small.txt')
