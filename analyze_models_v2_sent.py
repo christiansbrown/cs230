@@ -193,6 +193,9 @@ with tf.Session() as sess:
 		label_vals.append(step_labels)
 		sentence_vals.append(step_sentences)
 
+        if i > 5:
+            break        
+
 	# Extract values for metrics
 	metrics_values = {k: v[0] for k, v in eval_metrics.items()}
 	metrics_val = sess.run(metrics_values)
