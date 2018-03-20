@@ -35,7 +35,7 @@ from scipy.spatial.distance import cosine
 
 # Define keywords function (change as necessary)
 # Finds keywords given a sequence of similarities in sequence
-def find_keywords(similarities):
+def find_keywords(similarities, review):
     """
     Returns keyPoints: [[word_position, similarity], [,] ..]
     Positions and similarities of words that are possible keywords
@@ -64,9 +64,14 @@ def find_keywords(similarities):
     intThresh = .01*max(similarities)
     count = 0
 
+    # ID for pad word, so we don't add <pad> to keywords
+    pad_id = np.max(review)
+
     for i, first_deriv in reversed(list(enumerate(first_derivs))):
         
-        if abs(first_deriv) > intThresh and count <= 10:
+        # Check if word is pad word or not
+
+        if abs(first_deriv) > intThresh and count <= 10 and review[i] != pad_id:
             
             keyPoints.append([i, similarities[i]])
             count += 1
@@ -309,7 +314,7 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
             
             
             # Identify keywords
-            keyPoints = find_keywords(similarities)
+            keyPoints = find_keywords(similarities, review)
             word_positions, _ = zip(*keyPoints)
             
             # Find associated word_ids and words
