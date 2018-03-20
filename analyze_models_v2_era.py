@@ -133,6 +133,12 @@ print('Creating era models...')
 model_spec_era = model_fn('eval', inputs_era, params_era, reuse=False)
 print('Done')
 
+print(era_model_path)
+print(path_words)
+print(path_era_tags)
+print(path_reviews)
+print(path_eras)
+
 # Evaluate the model... 
 # evaluate(model-spec, args.model_dir, params, args.restore_from)
 
