@@ -194,7 +194,8 @@ with tf.Session() as sess:
 		sentence_vals.append(step_sentences)
 
         if i > 5:
-            break        
+            print('premature break!')
+            break     
 
 	# Extract values for metrics
 	metrics_values = {k: v[0] for k, v in eval_metrics.items()}
