@@ -195,8 +195,8 @@ with tf.Session() as sess:
 
         if i > 5:
             print('premature break!')
-            break     
-
+            break
+            
 	# Extract values for metrics
 	metrics_values = {k: v[0] for k, v in eval_metrics.items()}
 	metrics_val = sess.run(metrics_values)
