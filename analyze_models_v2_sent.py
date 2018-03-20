@@ -194,6 +194,7 @@ with tf.Session() as sess:
 		sentence_vals.append(step_sentences)
 
         if i > 5:
+            print('break added here')
             break
 
 	# Extract values for metrics
