@@ -1,0 +1,13 @@
+{
+    "model_version": "lstm",
+    "lstm_num_units": 25,
+    "embedding_size": 150,
+
+    "learning_rate": 0.0020467565737326125,
+    "batch_size": 32,
+    "num_epochs": 10,
+    "dropout_rate": 0.3,
+    "reg_strength": 0.026907660993304335,
+
+    "save_summary_steps": 100
+}
