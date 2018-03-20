@@ -55,9 +55,11 @@ if __name__ == "__main__":
     # Perform hypersearch over multiple parameters
     random.seed(0)
     # ls_learning_rates = [1e-4,1e-3, 1e-2, 1e-1]#, 1e-2, 1e-1]
-    p = np.random.uniform(low=3, high=4, size=(4,))
+    # p = np.random.uniform(low=3, high=4, size=(4,))
+    p = np.random.uniform(low=1, high=3, size=(3,))
     ls_learning_rates = 10**-p
-    p = np.random.uniform(low = 1, high = 3, size = (4,))
+    # p = np.random.uniform(low = 1, high = 3, size = (4,))
+    p = np.random.uniform(low=2, high=1, size = (3,))
     ls_reg_strengths = 10**-p#[1e-2]#, 1e-1]
     ls_embedding_sizes = [150]
     ls_lstm_num_units = [25]
