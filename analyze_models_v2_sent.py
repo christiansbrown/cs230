@@ -177,7 +177,7 @@ with tf.Session() as sess:
 	sentence_vals = []
 	# Maybe the shape is different so I am returning something different...?
 
-	for i in range(7)#num_steps):
+	for i in range(7):#num_steps):
 		print('step number: {}/{}'.format(i+1,num_steps))
 		sess.run(update_metrics)
 
