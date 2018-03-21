@@ -177,7 +177,7 @@ with tf.Session() as sess:
 	sentence_vals = []
 	# Maybe the shape is different so I am something different...?
 
-	for i in range(num_steps):
+	for i in range(10):#num_steps):
 		print('step number: {}/{}'.format(i+1,num_steps))
 		sess.run(update_metrics)
 
@@ -187,9 +187,6 @@ with tf.Session() as sess:
 		pred_vals.append(step_pred)
 		label_vals.append(step_labels)
 		sentence_vals.append(step_sentences)
-
-        if i > 10:
-            break
 
 	# Extract values for metrics
 	metrics_values = {k: v[0] for k, v in eval_metrics.items()}
