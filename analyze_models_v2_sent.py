@@ -241,6 +241,9 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
     
     correct_count = 0
     
+    # Initialize variable to store all similarity outputs
+    similarity_vals = []
+
     # Sequence of activations for each example in batch [max_seq_length, acts]
     for review_id, activations in enumerate(epoch_outputs):     
     
@@ -280,10 +283,15 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
             else:
                 good_keywords.update(words)
 
+        similarity_vals.append(similarities)
+
     print(' Predicted {} of {} sentiments correctly'.format(
                                         correct_count, len(epoch_outputs)))
 
     # Pickle the counter for analysis?
     pickle.dump(bad_keywords, open( "bad_keywords_sent.pkl", "wb"))
-    pickle.dump(good_keywords, open( "good_keywords_sent.pkl", "wb"))    
+    pickle.dump(good_keywords, open( "good_keywords_sent.pkl", "wb"))   
+
+    pickle.dump(similarity_vals, open( "similarity_vals_sent.pkl", "wb"))
+
     

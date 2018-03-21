@@ -116,8 +116,6 @@ num_oov_buckets = params_era.num_oov_buckets
 
 # Update model params to include number of tags attribute
 params_era.number_of_tags = params_era.number_of_eras
-# Try something dumb..?
-# params_era.number_of_tags = params_era.number_of_sentiments
 
 # Get paths for vocabularies and dataset
 # path_words = os.path.join(args.data_dir, 'words_small.txt')
@@ -248,6 +246,9 @@ with open(vocab_path) as f:
 era1_keywords = Counter() # 2001-2008
 era2_keywords = Counter() # 2009-2013  
 era3_keywords = Counter() # 2014-2017
+
+# Define object to hold all similarity outputs..
+similarity_vals = []
     
 # Outputs for current epoch [batch_size, max_seq_length, activations]   
 for epoch_id, epoch_outputs in enumerate(output_vals):
@@ -302,11 +303,15 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
             else:
             	era3_keywords.update(words)
 
+    	similarity_vals.append(similarities)
+
     print(' Predicted {} of {} eras correctly'.format(
                                         correct_count, len(epoch_outputs)))
 
     # Pickle the counter for analysis?
     pickle.dump(era1_keywords, open( "era1_keywords_era.pkl", "wb"))
     pickle.dump(era2_keywords, open( "era2_keywords_era.pkl", "wb"))    
-    pickle.dump(era3_keywords, open( "era3_keywords_era.pkl", "wb"))    
+    pickle.dump(era3_keywords, open( "era3_keywords_era.pkl", "wb"))
+
+    pickle.dump(similarity_vals, open( "similarity_vals_era.pkl", "wb"))    
 
