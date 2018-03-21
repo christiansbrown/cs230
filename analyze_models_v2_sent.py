@@ -188,6 +188,9 @@ with tf.Session() as sess:
 		label_vals.append(step_labels)
 		sentence_vals.append(step_sentences)
 
+        if i > 10:
+            break
+
 	# Extract values for metrics
 	metrics_values = {k: v[0] for k, v in eval_metrics.items()}
 	metrics_val = sess.run(metrics_values)
@@ -203,10 +206,10 @@ print(' - Done!')
 
 # # write to pickle for tentative analysis
 # # pickle.dump(output_vals, open( "output_vals_small.pkl", "wb" ) 
-# pickle.dump(pkl_output, open( "output_vals_sent.pkl", "wb" ) )
-# pickle.dump(pkl_preds, open( "pred_vals_sent.pkl", "wb" ) )
-# pickle.dump(pkl_labels, open( "label_vals_sent.pkl", "wb" ) )
-# pickle.dump(pkl_sentences, open( "sentence_vals_sent.pkl", "wb" ) )
+pickle.dump(pkl_output, open( "output_vals_sent.pkl", "wb" ) )
+pickle.dump(pkl_preds, open( "pred_vals_sent.pkl", "wb" ) )
+pickle.dump(pkl_labels, open( "label_vals_sent.pkl", "wb" ) )
+pickle.dump(pkl_sentences, open( "sentence_vals_sent.pkl", "wb" ) )
 
 
 #%% Putting it all together - analysis pipeline
