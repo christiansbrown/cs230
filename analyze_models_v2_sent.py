@@ -188,7 +188,7 @@ with tf.Session() as sess:
 	pred_vals = []
 	label_vals = []
 	sentence_vals = []
-	# Maybe the shape is different so I am returning something different...?
+	# Maybe the shape is different so I am something different...?
 
 	for i in range(num_steps):
 		print('step number: {}/{}'.format(i+1,num_steps))
@@ -274,9 +274,9 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
             similarities.append(similarity)
             
         # Investigate keywords if model predicted correctly
-        if label == pred:
+        if True:#label == pred:
 
-            correct_count += 1
+            if label == pred: correct_count += 1
             
             # Identify keywords
             keyPoints = find_keywords(similarities, review)

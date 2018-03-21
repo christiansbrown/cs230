@@ -281,8 +281,9 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
             similarities.append(similarity)
             
         # Investigate keywords if model predicted correctly
-        if label == pred:
-            correct_count += 1
+        if True:#label == pred:
+            
+            if label == pred: correct_count += 1
 
             # Identify keywords
             keyPoints = find_keywords(similarities, review)
@@ -299,7 +300,7 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
             elif label == 1:
                 era2_keywords.update(words)
             else:
-            	era3_keywords.update(word)
+            	era3_keywords.update(words)
 
     print(' Predicted {} of {} eras correctly'.format(
                                         correct_count, len(epoch_outputs)))
