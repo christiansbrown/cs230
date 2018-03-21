@@ -73,19 +73,6 @@ def find_keywords(similarities, review):
         
     return keyPoints
 
-# Remapping prediction IDs because it is inconsistent with labels
-def remap_preds(preds):
-    
-    for i, pred in enumerate(preds):
-        if pred == 0:
-            preds[i] = 1
-        elif pred == 1:
-            preds[i] = 2
-        else:
-            preds[i] = 0
-    
-    return preds
-
 # For inputting arguments from console
 parser = argparse.ArgumentParser()
 parser.add_argument('--model_dir', default='experiments/base_model_sentiment',
@@ -249,7 +236,7 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
     
     # Obtain current epochs predictions, labels, tokenized reviews
     epoch_labels = label_vals[epoch_id]
-    epoch_preds = remap_preds(pred_vals[epoch_id])
+    epoch_preds = pred_vals[epoch_id]
     epoch_reviews = sentence_vals[epoch_id]
     
     correct_count = 0
