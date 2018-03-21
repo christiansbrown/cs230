@@ -35,7 +35,7 @@ from scipy.spatial.distance import cosine
 
 # Define keywords function (change as necessary)
 # Finds keywords given a sequence of similarities in sequence
-def find_keywords(similarities):
+def find_keywords(similarities, review):
     """
     Returns keyPoints: [[word_position, similarity], [,] ..]
     Positions and similarities of words that are possible keywords
@@ -72,6 +72,19 @@ def find_keywords(similarities):
             count += 1
         
     return keyPoints
+
+# Remapping prediction IDs because it is inconsistent with labels
+def remap_preds(preds):
+    
+    for i, pred in enumerate(preds):
+        if pred == 0:
+            preds[i] = 1
+        elif pred == 1:
+            preds[i] = 2
+        else:
+            preds[i] = 0
+    
+    return preds
 
 # For inputting arguments from console
 parser = argparse.ArgumentParser()
@@ -193,61 +206,27 @@ with tf.Session() as sess:
 
 		step_output, step_pred, step_labels, step_sentences = sess.run([outputs, predictions, labels, sentences])
 
-		# output_vals.append(sess.run(outputs))
-		# prediction_vals.append(sess.run(predictions))
-		# labels_vals.append(sess.run(labels))
-		# sentence_vals.append(sess.run(sentences))
-
 		output_vals.append(step_output)
 		pred_vals.append(step_pred)
 		label_vals.append(step_labels)
 		sentence_vals.append(step_sentences)
-
-		if i > 5:
-			break
 
 	# Extract values for metrics
 	metrics_values = {k: v[0] for k, v in eval_metrics.items()}
 	metrics_val = sess.run(metrics_values)
 	metrics_string = " ; ".join("{}: {:05.3f}".format(k, v) for k, v in metrics_val.items())
 
-	# Extract values for outputs
-	# outputs = sess.run(outputs)
-
-# Convert to arrays?
-# output_vals = np.array(output_vals)
-# prediction_vals = np.array(prediction_vals)
-# labels_vals = np.array(labels_vals)
-# sentence_vals = np.array(sentence_vals)
-
-pkl_output = output_vals#[2]
-pkl_preds = pred_vals#[2]
-pkl_labels = label_vals#[2]
-pkl_sentences = sentence_vals#[2]
-
-# print(np.shape(output_vals))
-# print(np.shape(prediction_vals))
-# print(np.shape(labels_vals))
-# print(np.shape(sentence_vals))
-
-# print(np.shape(pkl_output))
-# print(np.shape(pkl_preds))
-# print(np.shape(pkl_labels))
-# print(np.shape(pkl_sentences))
-
-# exit(0)
-
-
 print(' - Done!')
-# exit(0)
 
-# write to pickle for tentative analysis
-# pickle.dump(output_vals, open( "output_vals_small.pkl", "wb" ) 
-pickle.dump(pkl_output, open( "output_vals_era.pkl", "wb" ) )
-pickle.dump(pkl_preds, open( "pred_vals_era.pkl", "wb" ) )
-pickle.dump(pkl_labels, open( "label_vals_era.pkl", "wb" ) )
-pickle.dump(pkl_sentences, open( "sentence_vals_era.pkl", "wb" ) )
-
+# # write to pickle for tentative analysis
+# pkl_output = output_vals#[2]
+# pkl_preds = pred_vals#[2]
+# pkl_labels = label_vals#[2]
+# pkl_sentences = sentence_vals#[2]
+# pickle.dump(pkl_output, open( "output_vals_era.pkl", "wb" ) )
+# pickle.dump(pkl_preds, open( "pred_vals_era.pkl", "wb" ) )
+# pickle.dump(pkl_labels, open( "label_vals_era.pkl", "wb" ) )
+# pickle.dump(pkl_sentences, open( "sentence_vals_era.pkl", "wb" ) )
 
 #%% Putting it all together - analysis pipeline
       
@@ -266,8 +245,9 @@ with open(vocab_path) as f:
     word_map = {i:word.strip() for i, word in enumerate(f,1)}
 
 # Iterate through data and build up counters
-good_keywords = Counter() 
-bad_keywords = Counter()   
+era1_keywords = Counter() # 2001-2008
+era2_keywords = Counter() # 2009-2013  
+era3_keywords = Counter() # 2014-2017
     
 # Outputs for current epoch [batch_size, max_seq_length, activations]   
 for epoch_id, epoch_outputs in enumerate(output_vals):
@@ -276,7 +256,7 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
     
     # Obtain current epochs predictions, labels, tokenized reviews
     epoch_labels = label_vals[epoch_id]
-    epoch_preds = pred_vals[epoch_id]
+    epoch_preds = remap_preds(pred_vals[epoch_id])
     epoch_reviews = sentence_vals[epoch_id]
     
     correct_count = 0
@@ -300,16 +280,12 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
             similarity = cosine(curr_activation, last_activation)
             similarities.append(similarity)
             
-        # Investigate keywords if model predicted correct
-        
+        # Investigate keywords if model predicted correctly
         if label == pred:
             correct_count += 1
-        
-        if True:#label == pred:
-            
-            
+
             # Identify keywords
-            keyPoints = find_keywords(similarities)
+            keyPoints = find_keywords(similarities, review)
             word_positions, _ = zip(*keyPoints)
             
             # Find associated word_ids and words
@@ -319,32 +295,17 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
             
             # Update good or bad keywords counter depending on result
             if label == 0:
-                bad_keywords.update(words)
+                era1_keywords.update(words)
+            elif label == 1:
+                era2_keywords.update(words)
             else:
-                good_keywords.update(words)
+            	era3_keywords.update(word)
 
     print(' Predicted {} of {} eras correctly'.format(
-                                        correct_count+1, len(epoch_outputs)))
+                                        correct_count, len(epoch_outputs)))
 
     # Pickle the counter for analysis?
-    pickle.dump(bad_keywords, open( "bad_keywords_era.pkl", "wb"))
-    pickle.dump(good_keywords, open( "good_keywords_era.pkl", "wb"))    
-    
+    pickle.dump(era1_keywords, open( "era1_keywords_era.pkl", "wb"))
+    pickle.dump(era2_keywords, open( "era2_keywords_era.pkl", "wb"))    
+    pickle.dump(era3_keywords, open( "era3_keywords_era.pkl", "wb"))    
 
-
-
-# TODO: Dump a few other useful things as well
-
-
-# read from cPickle
-# output_vals = pickle.load( open( "output_vals_small.pkl", "rb" ) )
-
-
-# Load vocabularies
-
-# # Load data
-# reviews = load_dataset_from_text(path_all_reviews, words)
-# era_labels = load_dataset_from_text(path_all_eras, tags)
-
-# # Load best models
-# era_model_specs = model_fn('eval', era_inputs, params, reuse=False)
