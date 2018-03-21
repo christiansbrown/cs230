@@ -303,8 +303,8 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
             else:
             	era3_keywords.update(words)
 
-        similarity_vals.append(similarities)
-
+        if np.mod(epoch_id,10) == 0:
+            similarity_vals.append([epoch_id, similarities])
 
     print(' Predicted {} of {} eras correctly'.format(
                                         correct_count, len(epoch_outputs)))

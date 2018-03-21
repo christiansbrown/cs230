@@ -229,6 +229,9 @@ with open(vocab_path) as f:
 good_keywords = Counter() 
 bad_keywords = Counter()   
     
+# Initialize variable to store all similarity outputs
+similarity_vals = []
+
 # Outputs for current epoch [batch_size, max_seq_length, activations]   
 for epoch_id, epoch_outputs in enumerate(output_vals):
 
@@ -240,9 +243,6 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
     epoch_reviews = sentence_vals[epoch_id]
     
     correct_count = 0
-    
-    # Initialize variable to store all similarity outputs
-    similarity_vals = []
 
     # Sequence of activations for each example in batch [max_seq_length, acts]
     for review_id, activations in enumerate(epoch_outputs):     
@@ -283,7 +283,9 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
             else:
                 good_keywords.update(words)
 
-        similarity_vals.append(similarities)
+        # Add similarity results every 10 epochs (to reduce size)
+        if np.mod(epoch_id,10) == 0:
+            similarity_vals.append([epoch_id, similarities])
 
     print(' Predicted {} of {} sentiments correctly'.format(
                                         correct_count, len(epoch_outputs)))
