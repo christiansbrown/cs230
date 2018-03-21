@@ -198,7 +198,7 @@ with tf.Session() as sess:
 	sentence_vals = []
 	# Maybe the shape is different so I am returning something different...?
 
-	for i in range(num_steps):
+	for i in range(10):#num_steps):
 		print('step number: {}/{}'.format(i+1,num_steps))
 		sess.run(update_metrics)
 
@@ -214,7 +214,7 @@ with tf.Session() as sess:
 	metrics_val = sess.run(metrics_values)
 	metrics_string = " ; ".join("{}: {:05.3f}".format(k, v) for k, v in metrics_val.items())
 
-print(' - Done!')
+print(' - Done!!')
 
 # # write to pickle for tentative analysis
 pkl_output = output_vals#[2]
