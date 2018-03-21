@@ -305,6 +305,7 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
 
     	similarity_vals.append(similarities)
 
+
     print(' Predicted {} of {} eras correctly'.format(
                                         correct_count, len(epoch_outputs)))
 
@@ -313,5 +314,6 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
     pickle.dump(era2_keywords, open( "era2_keywords_era.pkl", "wb"))    
     pickle.dump(era3_keywords, open( "era3_keywords_era.pkl", "wb"))
 
+    print('-done!')
     pickle.dump(similarity_vals, open( "similarity_vals_era.pkl", "wb"))    
 
