@@ -219,15 +219,15 @@ with tf.Session() as sess:
 
 print(' - Done!!')
 
-# # write to pickle for tentative analysis
-pkl_output = output_vals#[2]
-pkl_preds = pred_vals#[2]
-pkl_labels = label_vals#[2]
-pkl_sentences = sentence_vals#[2]
-pickle.dump(pkl_output, open( "output_vals_era.pkl", "wb" ) )
-pickle.dump(pkl_preds, open( "pred_vals_era.pkl", "wb" ) )
-pickle.dump(pkl_labels, open( "label_vals_era.pkl", "wb" ) )
-pickle.dump(pkl_sentences, open( "sentence_vals_era.pkl", "wb" ) )
+# # # write to pickle for tentative analysis
+# pkl_output = output_vals#[2]
+# pkl_preds = pred_vals#[2]
+# pkl_labels = label_vals#[2]
+# pkl_sentences = sentence_vals#[2]
+# pickle.dump(pkl_output, open( "output_vals_era.pkl", "wb" ) )
+# pickle.dump(pkl_preds, open( "pred_vals_era.pkl", "wb" ) )
+# pickle.dump(pkl_labels, open( "label_vals_era.pkl", "wb" ) )
+# pickle.dump(pkl_sentences, open( "sentence_vals_era.pkl", "wb" ) )
 
 #%% Putting it all together - analysis pipeline
       
@@ -291,23 +291,26 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
 
             # Identify keywords
             keyPoints = find_keywords(similarities, review)
-            word_positions, _ = zip(*keyPoints)
-            
-            # Find associated word_ids and words
-            word_ids = [review[i] for i in word_positions]
-            words = [word_map[k+1] for k in word_ids]            
-            
-            
-            # Update good or bad keywords counter depending on result
-            if label == 0:
-                era1_keywords.update(words)
-            elif label == 1:
-                era2_keywords.update(words)
-            else:
-            	era3_keywords.update(words)
 
-        if np.mod(epoch_id,10) == 0:
-            similarity_vals.append([epoch_id, similarities])
+            # Make sure that list is not empty
+            if not len(keyPoints):
+                word_positions, _ = zip(*keyPoints)
+                
+                # Find associated word_ids and words
+                word_ids = [review[i] for i in word_positions]
+                words = [word_map[k+1] for k in word_ids]            
+                
+                
+                # Update good or bad keywords counter depending on result
+                if label == 0:
+                    era1_keywords.update(words)
+                elif label == 1:
+                    era2_keywords.update(words)
+                else:
+                	era3_keywords.update(words)
+
+        # if np.mod(epoch_id,10) == 0:
+        #     similarity_vals.append([epoch_id, similarities])
 
     print(' Predicted {} of {} eras correctly'.format(
                                         correct_count, len(epoch_outputs)))
@@ -317,5 +320,5 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
     pickle.dump(era2_keywords, open( "era2_keywords_era.pkl", "wb"))    
     pickle.dump(era3_keywords, open( "era3_keywords_era.pkl", "wb"))
 
-    pickle.dump(similarity_vals, open( "similarity_vals_era.pkl", "wb"))    
+    # pickle.dump(similarity_vals, open( "similarity_vals_era.pkl", "wb"))    
 

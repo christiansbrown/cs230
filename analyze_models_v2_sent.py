@@ -273,22 +273,25 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
             
             # Identify keywords
             keyPoints = find_keywords(similarities, review)
-            word_positions, _ = zip(*keyPoints)
-            
-            # Find associated word_ids and words
-            word_ids = [review[i] for i in word_positions]
-            words = [word_map[k+1] for k in word_ids]            
-            
-            # Update good or bad keywords counter depending on result
-            # NOTE: tf may not mad labels to ints consistently, change as necessary
-            if label == 1:
-                bad_keywords.update(words)
-            else:
-                good_keywords.update(words)
 
-        # Add similarity results every 10 epochs (to reduce size)
-        if np.mod(epoch_id,10) == 0:
-            similarity_vals.append([epoch_id, similarities])
+            # Make sure that list is not empty
+            if not len(keyPoints):
+                word_positions, _ = zip(*keyPoints)
+                
+                # Find associated word_ids and words
+                word_ids = [review[i] for i in word_positions]
+                words = [word_map[k+1] for k in word_ids]            
+                
+                # Update good or bad keywords counter depending on result
+                # NOTE: tf may not mad labels to ints consistently, change as necessary
+                if label == 1:
+                    bad_keywords.update(words)
+                else:
+                    good_keywords.update(words)
+
+        # # Add similarity results every 10 epochs (to reduce size)
+        # if np.mod(epoch_id,10) == 0:
+        #     similarity_vals.append([epoch_id, similarities])
 
     print(' Predicted {} of {} sentiments correctly'.format(
                                         correct_count, len(epoch_outputs)))
