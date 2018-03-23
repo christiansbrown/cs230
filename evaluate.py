@@ -21,6 +21,7 @@ parser.add_argument('--model_dir', default='experiments/base_model',
 parser.add_argument('--data_dir', default='data/small', help="Directory containing the dataset")
 parser.add_argument('--restore_from', default='best_weights',
                     help="Subdirectory of model dir or file containing the weights")
+parser.add_argument('--objective', default='sentiment')
 
 if __name__ == '__main__':
     # Set the random seed for the whole graph

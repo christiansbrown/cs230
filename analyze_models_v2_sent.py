@@ -64,9 +64,12 @@ def find_keywords(similarities, review):
     intThresh = .01*max(similarities)
     count = 0
 
+    # ID for pad word, so we don't add <pad> to keywords
+    pad_id = np.max(review)
+
     for i, first_deriv in reversed(list(enumerate(first_derivs))):
         
-        if abs(first_deriv) > intThresh and count <= 10:
+        if abs(first_deriv) > intThresh and count <= 10 and review[i] != pad_id:
             
             keyPoints.append([i, similarities[i]])
             count += 1
@@ -177,7 +180,7 @@ with tf.Session() as sess:
 	sentence_vals = []
 	# Maybe the shape is different so I am something different...?
 
-	for i in range(10):#num_steps):
+	for i in range(num_steps):
 		print('step number: {}/{}'.format(i+1,num_steps))
 		sess.run(update_metrics)
 
@@ -193,20 +196,20 @@ with tf.Session() as sess:
 	metrics_val = sess.run(metrics_values)
 	metrics_string = " ; ".join("{}: {:05.3f}".format(k, v) for k, v in metrics_val.items())
 
-pkl_output = output_vals#[2]
-pkl_preds = pred_vals#[2]
-pkl_labels = label_vals#[2]
-pkl_sentences = sentence_vals#[2]
+# pkl_output = output_vals#[2]
+# pkl_preds = pred_vals#[2]
+# pkl_labels = label_vals#[2]
+# pkl_sentences = sentence_vals#[2]
 
-print(' - Done!')
-# exit(0)
+# print(' - Done!')
+# # exit(0)
 
-# # write to pickle for tentative analysis
-# # pickle.dump(output_vals, open( "output_vals_small.pkl", "wb" ) 
-pickle.dump(pkl_output, open( "output_vals_sent.pkl", "wb" ) )
-pickle.dump(pkl_preds, open( "pred_vals_sent.pkl", "wb" ) )
-pickle.dump(pkl_labels, open( "label_vals_sent.pkl", "wb" ) )
-pickle.dump(pkl_sentences, open( "sentence_vals_sent.pkl", "wb" ) )
+# # # write to pickle for tentative analysis
+# # # pickle.dump(output_vals, open( "output_vals_small.pkl", "wb" ) 
+# pickle.dump(pkl_output, open( "output_vals_sent.pkl", "wb" ) )
+# pickle.dump(pkl_preds, open( "pred_vals_sent.pkl", "wb" ) )
+# pickle.dump(pkl_labels, open( "label_vals_sent.pkl", "wb" ) )
+# pickle.dump(pkl_sentences, open( "sentence_vals_sent.pkl", "wb" ) )
 
 
 #%% Putting it all together - analysis pipeline
@@ -294,6 +297,6 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
     pickle.dump(bad_keywords, open( "bad_keywords_sent.pkl", "wb"))
     pickle.dump(good_keywords, open( "good_keywords_sent.pkl", "wb"))   
 
-    pickle.dump(similarity_vals, open( "similarity_vals_sent.pkl", "wb"))
+    # pickle.dump(similarity_vals, open( "similarity_vals_sent.pkl", "wb"))
 
     

@@ -64,9 +64,12 @@ def find_keywords(similarities, review):
     intThresh = .01*max(similarities)
     count = 0
 
+    # ID for pad word, so we don't add <pad> to keywords
+    pad_id = np.max(review)
+
     for i, first_deriv in reversed(list(enumerate(first_derivs))):
         
-        if abs(first_deriv) > intThresh and count <= 10:
+        if abs(first_deriv) > intThresh and count <= 10 and review[i] != pad_id:
             
             keyPoints.append([i, similarities[i]])
             count += 1
@@ -198,7 +201,7 @@ with tf.Session() as sess:
 	sentence_vals = []
 	# Maybe the shape is different so I am returning something different...?
 
-	for i in range(10):#num_steps):
+	for i in range(num_steps):
 		print('step number: {}/{}'.format(i+1,num_steps))
 		sess.run(update_metrics)
 
