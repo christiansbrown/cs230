@@ -293,7 +293,7 @@ for epoch_id, epoch_outputs in enumerate(output_vals):
             keyPoints = find_keywords(similarities, review)
 
             # Make sure that list is not empty
-            if not len(keyPoints):
+            if len(keyPoints) != 0:
                 word_positions, _ = zip(*keyPoints)
                 
                 # Find associated word_ids and words
